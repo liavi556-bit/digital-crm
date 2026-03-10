@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Digital CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0e1f;
+  --bg2: #111228;
+  --surface: #161830;
+  --surface2: #1c1e38;
+  --surface3: #222442;
+  --border: rgba(120,100,255,0.15);
+  --border2: rgba(120,100,255,0.28);
+  --accent: #6c63ff;
+  --accent-light: rgba(108,99,255,0.15);
+  --accent2: #8b83ff;
+  --accent-dark: #4f46e5;
+  --accent-grad: linear-gradient(135deg, #3b2fcf 0%, #6c63ff 50%, #22d3ee 100%);
+  --accent-grad2: linear-gradient(135deg, #4338ca 0%, #6c63ff 100%);
+  --teal: #22d3ee;
+  --teal-light: rgba(34,211,238,0.12);
+  --gold: #fbbf24;
+  --gold-light: rgba(251,191,36,0.12);
+  --green: #34d399;
+  --green-light: rgba(52,211,153,0.12);
+  --red: #f87171;
+  --red-light: rgba(248,113,113,0.12);
+  --orange: #fb923c;
+  --orange-light: rgba(251,146,60,0.12);
+  --purple: #a78bfa;
+  --purple-light: rgba(167,139,250,0.12);
+  --text: #e8e6f8;
+  --text2: #b8b4d8;
+  --text3: #7870a8;
+  --text4: #4a4570;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3), 0 0 0 1px rgba(108,99,255,0.06);
+  --shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(108,99,255,0.1);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(108,99,255,0.15);
+  --radius: 14px;
+  --radius-sm: 9px;
+  --radius-xs: 6px;
+  --glow: 0 0 20px rgba(108,99,255,0.3);
+  --glow-teal: 0 0 20px rgba(34,211,238,0.3);
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body { height:100%; font-family:'Heebo',sans-serif; background:var(--bg); color:var(--text); overflow:hidden; }
+
+/* Grid background overlay */
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:
+    linear-gradient(rgba(108,99,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(108,99,255,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+body::after {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background: radial-gradient(ellipse 60% 50% at 20% 20%, rgba(108,99,255,0.08) 0%, transparent 70%),
+              radial-gradient(ellipse 40% 40% at 80% 80%, rgba(34,211,238,0.05) 0%, transparent 70%);
+}
+
+::-webkit-scrollbar { width:4px; height:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:linear-gradient(180deg,#6c63ff,#22d3ee); border-radius:3px; }
+
+/* ===== APP SHELL ===== */
+.app { display:flex; flex-direction:column; height:100vh; position:relative; z-index:1; }
+
+/* ===== TOPBAR ===== */
+.topbar {
+  display:flex; align-items:center; gap:14px;
+  padding:0 20px; height:58px;
+  background: rgba(13,14,31,0.95);
+  border-bottom: 1px solid rgba(108,99,255,0.2);
+  box-shadow: 0 1px 0 rgba(108,99,255,0.15), 0 4px 24px rgba(0,0,0,0.4);
+  flex-shrink:0; z-index:50;
+  position:relative;
+  backdrop-filter: blur(20px);
+}
+.topbar::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background: linear-gradient(90deg, transparent, rgba(108,99,255,0.7), rgba(34,211,238,0.5), transparent);
+  pointer-events:none;
+}
+.topbar::after {
+  content:''; position:absolute; inset:0;
+  background: repeating-linear-gradient(90deg,rgba(108,99,255,0.02) 0px,rgba(108,99,255,0.02) 1px,transparent 1px,transparent 48px);
+  pointer-events:none;
+}
+.logo {
+  font-size:1.1rem; font-weight:900; letter-spacing:-0.5px;
+  background: linear-gradient(135deg, #c8c4ff 0%, #22d3ee 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  white-space:nowrap;
+}
+.topbar-nav { display:flex; gap:2px; background:rgba(108,99,255,0.1); padding:3px; border-radius:var(--radius-sm); border:1px solid rgba(108,99,255,0.25); }
+.topbar-tab {
+  padding:5px 14px; border-radius:7px;
+  font-size:0.8rem; font-weight:700;
+  cursor:pointer; color:var(--text3);
+  transition:all 0.15s; border:none; background:none;
+  font-family:'Heebo',sans-serif; white-space:nowrap;
+}
+.topbar-tab.active { background:rgba(108,99,255,0.28); color:#e8e6ff; box-shadow:0 2px 8px rgba(108,99,255,0.2); }
+.topbar-tab:hover:not(.active) { color:var(--text2); background:rgba(108,99,255,0.1); }
+.topbar-right { margin-right:auto; display:flex; align-items:center; gap:10px; }
+.today-badge {
+  font-size:0.78rem; font-weight:700; color:var(--text2);
+  background:rgba(108,99,255,0.1); border:1px solid rgba(108,99,255,0.25);
+  padding:4px 12px; border-radius:20px;
+}
+.btn-add {
+  display:flex; align-items:center; gap:5px;
+  background:rgba(108,99,255,0.2); color:#c8c4ff; border:1px solid rgba(108,99,255,0.35);
+  padding:7px 14px; border-radius:var(--radius-sm);
+  font-size:0.8rem; font-weight:800; cursor:pointer;
+  font-family:'Heebo',sans-serif;
+  transition:all 0.2s;
+}
+.btn-add:hover { background:rgba(108,99,255,0.35); transform:translateY(-1px); box-shadow:0 4px 16px rgba(108,99,255,0.25); }
+
+/* ===== MAIN LAYOUT ===== */
+.workspace { display:flex; flex:1; overflow:hidden; }
+
+/* ===== SIDEBAR — CLIENTS ===== */
+.sidebar {
+  width:270px; flex-shrink:0;
+  background:var(--surface);
+  border-left:1px solid var(--border);
+  display:flex; flex-direction:column;
+  overflow:hidden;
+  box-shadow: inset -1px 0 0 rgba(108,99,255,0.1);
+}
+.sidebar-header {
+  padding:14px 16px 10px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+  background:linear-gradient(180deg,rgba(108,99,255,0.08),transparent);
+}
+.sidebar-title { font-size:0.78rem; font-weight:800; color:var(--text3); letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
+.sidebar-search {
+  display:flex; align-items:center; gap:6px;
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:6px 10px;
+}
+.sidebar-search input { background:none; border:none; outline:none; color:var(--text); font-family:'Heebo',sans-serif; font-size:0.82rem; width:100%; text-align:right; }
+.sidebar-search input::placeholder { color:var(--text4); }
+.clients-list { flex:1; overflow-y:auto; padding:8px; }
+.client-item {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 10px; border-radius:var(--radius-sm);
+  cursor:pointer; transition:all 0.15s;
+  margin-bottom:2px;
+  position:relative;
+}
+.client-item:hover { background:var(--surface2); }
+.client-item.active { background:linear-gradient(135deg, rgba(108,99,255,0.15), rgba(34,211,238,0.05)); border:1px solid rgba(108,99,255,0.25); }
+.client-item.active .client-item-name { color:#a8a4ff; font-weight:800; }
+.client-avatar {
+  width:34px; height:34px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.85rem; font-weight:800; color:#fff;
+  flex-shrink:0;
+}
+.client-item-info { flex:1; min-width:0; }
+.client-item-name { font-size:0.85rem; font-weight:700; color:var(--text); truncate; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.client-item-sub { font-size:0.72rem; color:var(--text3); margin-top:1px; }
+.client-item-dot {
+  width:7px; height:7px; border-radius:50%; flex-shrink:0;
+}
+.dot-active { background:var(--green); }
+.dot-pending { background:var(--orange); }
+.dot-done { background:var(--text4); }
+.sidebar-add-btn {
+  margin:8px; padding:9px; border-radius:var(--radius-sm);
+  background:rgba(108,99,255,0.08); color:#a8a4ff;
+  border:1.5px dashed rgba(108,99,255,0.35); cursor:pointer;
+  font-size:0.8rem; font-weight:700; text-align:center;
+  font-family:'Heebo',sans-serif; transition:all 0.15s; flex-shrink:0;
+}
+.sidebar-add-btn:hover { background:linear-gradient(135deg,rgba(108,99,255,0.4),rgba(34,211,238,0.2)); color:#e8e6ff; border-style:solid; border-color:transparent; }
+
+/* ===== CALENDAR AREA ===== */
+.cal-area { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+
+/* ===== CALENDAR HEADER ===== */
+.cal-header {
+  display:flex; align-items:center; gap:12px;
+  padding:12px 20px; background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.cal-nav-btn {
+  width:32px; height:32px; border-radius:50%;
+  background:var(--surface2); border:1px solid var(--border);
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  font-size:0.9rem; color:var(--text2); transition:all 0.15s;
+}
+.cal-nav-btn:hover { background:linear-gradient(135deg,#6c63ff,#22d3ee); color:#fff; border-color:transparent; box-shadow:0 2px 12px rgba(108,99,255,0.4); }
+.cal-month-title { font-size:1.1rem; font-weight:900; color:var(--text); }
+.cal-month-heb { font-size:0.78rem; color:var(--text3); font-weight:500; }
+.cal-today-btn {
+  padding:5px 12px; border-radius:20px;
+  background:var(--surface2); border:1px solid var(--border);
+  color:var(--text2); font-size:0.78rem; font-weight:700;
+  cursor:pointer; font-family:'Heebo',sans-serif; transition:all 0.15s;
+}
+.cal-today-btn:hover { background:rgba(108,99,255,0.15); color:#a8a4ff; border-color:rgba(108,99,255,0.4); }
+.cal-filter-wrap { margin-right:auto; display:flex; gap:6px; flex-wrap:wrap; }
+.cal-filter {
+  padding:4px 10px; border-radius:20px; font-size:0.72rem; font-weight:700;
+  border:1.5px solid transparent; cursor:pointer; font-family:'Heebo',sans-serif;
+  transition:all 0.15s;
+}
+
+/* ===== CALENDAR GRID ===== */
+.cal-body { flex:1; overflow:hidden; display:flex; flex-direction:column; padding:0; }
+.cal-days-header {
+  display:grid; grid-template-columns:repeat(7,1fr);
+  background:rgba(108,99,255,0.06); border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.cal-day-name {
+  text-align:center; padding:8px 4px;
+  font-size:0.72rem; font-weight:800; color:var(--text3);
+  letter-spacing:0.5px;
+}
+.cal-day-name.weekend { color:var(--red); }
+.cal-grid {
+  flex:1; display:grid; grid-template-columns:repeat(7,1fr);
+  grid-template-rows:repeat(6,1fr);
+  gap:0; overflow:hidden;
+}
+.cal-cell {
+  border-bottom:1px solid var(--border);
+  border-left:1px solid var(--border);
+  padding:6px 7px; cursor:pointer;
+  transition:background 0.1s;
+  position:relative; overflow:hidden;
+  display:flex; flex-direction:column;
+  min-height:0;
+}
+.cal-cell:hover { background:rgba(108,99,255,0.07); }
+.cal-cell.other-month { background:rgba(13,14,31,0.5); }
+.cal-cell.other-month .cal-date { color:var(--text4); }
+.cal-cell.today { background:linear-gradient(135deg, rgba(108,99,255,0.12) 0%, rgba(34,211,238,0.06) 100%); }
+.cal-cell.today .cal-date-inner { background:linear-gradient(135deg,#6c63ff,#22d3ee); color:#fff; box-shadow:0 2px 12px rgba(108,99,255,0.5); }
+.cal-cell.selected { background:#eef1fe; border-color:var(--accent2); }
+.cal-date { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:3px; flex-shrink:0; }
+.cal-date-inner {
+  width:24px; height:24px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.78rem; font-weight:800; color:var(--text);
+}
+.cal-date-heb { font-size:0.6rem; color:var(--text4); font-weight:500; margin-top:2px; }
+.cal-cell.shabbat .cal-date-inner { color:var(--red); }
+.cal-tasks { display:flex; flex-direction:column; gap:2px; overflow:hidden; flex:1; }
+.cal-task-pill {
+  padding:1px 5px; border-radius:3px;
+  font-size:0.65rem; font-weight:700;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  cursor:pointer; border:none; text-align:right;
+  font-family:'Heebo',sans-serif; line-height:1.6;
+}
+.cal-more { font-size:0.62rem; color:var(--text3); font-weight:700; padding:0 5px; }
+
+/* ===== DAY PANEL ===== */
+.day-panel {
+  position:fixed; left:0; top:0; bottom:0; width:340px;
+  background:var(--surface); box-shadow: 4px 0 40px rgba(0,0,0,0.6), 1px 0 0 rgba(108,99,255,0.2);
+  z-index:200; transform:translateX(-100%);
+  transition:transform 0.25s cubic-bezier(0.4,0,0.2,1);
+  display:flex; flex-direction:column; overflow:hidden;
+}
+.day-panel.open { transform:translateX(0); }
+.day-panel-header {
+  padding:18px 18px 14px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.day-panel-title { font-size:1.15rem; font-weight:900; margin-bottom:3px; }
+.day-panel-sub { font-size:0.78rem; color:var(--text3); }
+.day-panel-close {
+  position:absolute; top:14px; left:14px;
+  width:28px; height:28px; border-radius:50%;
+  background:var(--surface2); border:1px solid var(--border);
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  font-size:0.9rem; color:var(--text2);
+}
+.day-panel-close:hover { background:var(--red-light); color:var(--red); }
+.day-panel-body { flex:1; overflow-y:auto; padding:14px; }
+.day-task-card {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:12px 14px;
+  margin-bottom:10px; border-right:3px solid;
+}
+.day-task-header { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+.day-task-client { font-size:0.72rem; font-weight:800; color:var(--text3); letter-spacing:0.5px; }
+.day-task-topic { font-size:0.9rem; font-weight:700; color:var(--text); margin-bottom:4px; }
+.day-task-meta { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.day-panel-add {
+  margin:0 14px 14px; padding:10px;
+  background:rgba(108,99,255,0.08); color:#a8a4ff;
+  border:1.5px dashed rgba(108,99,255,0.3); border-radius:var(--radius-sm);
+  cursor:pointer; font-size:0.82rem; font-weight:700;
+  text-align:center; font-family:'Heebo',sans-serif; transition:all 0.15s;
+  flex-shrink:0;
+}
+.day-panel-add:hover { background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(34,211,238,0.2)); color:#e8e6ff; border-style:solid; border-color:transparent; }
+.day-panel-overlay {
+  position:fixed; inset:0; background:rgba(26,31,54,0.25);
+  z-index:199; display:none;
+  backdrop-filter:blur(2px);
+}
+.day-panel-overlay.open { display:block; }
+
+/* ===== CLIENT DETAIL PANEL ===== */
+.client-panel { flex:1; display:flex; flex-direction:column; overflow:hidden; background:var(--surface); }
+.client-panel-header {
+  padding:14px 20px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:12px; flex-shrink:0;
+}
+.client-panel-avatar {
+  width:42px; height:42px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.1rem; font-weight:900; color:#fff;
+}
+.client-panel-name { font-size:1rem; font-weight:900; }
+.client-panel-sub { font-size:0.76rem; color:var(--text3); margin-top:1px; }
+.client-panel-actions { margin-right:auto; display:flex; gap:8px; }
+.client-tabs {
+  display:flex; gap:0; padding:0 20px;
+  border-bottom:1px solid var(--border); flex-shrink:0;
+  overflow-x:auto;
+}
+.client-tab {
+  padding:10px 16px; font-size:0.8rem; font-weight:700;
+  cursor:pointer; color:var(--text3); border:none; background:none;
+  font-family:'Heebo',sans-serif; white-space:nowrap;
+  border-bottom:2.5px solid transparent; margin-bottom:-1px;
+  transition:all 0.15s;
+}
+.client-tab.active { color:#a8a4ff; border-bottom-color:#6c63ff; }
+.client-tab:hover:not(.active) { color:var(--text); }
+.client-tab-body { flex:1; overflow-y:auto; padding:18px 20px; }
+.client-tab-content { display:none; }
+.client-tab-content.active { display:block; }
+
+/* ===== CARDS & TABLES ===== */
+.info-card {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:var(--radius); padding:16px 18px; margin-bottom:14px;
+}
+.info-card-title { font-size:0.72rem; font-weight:800; color:var(--text3); letter-spacing:1px; text-transform:uppercase; margin-bottom:12px; }
+.info-fields { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; }
+.info-field label { display:block; font-size:0.7rem; color:var(--text3); font-weight:600; margin-bottom:3px; }
+.info-field span { font-size:0.88rem; font-weight:700; color:var(--text); }
+.data-table { width:100%; border-collapse:collapse; }
+.data-table th { text-align:right; padding:8px 10px; font-size:0.7rem; color:var(--text3); font-weight:800; letter-spacing:0.5px; border-bottom:2px solid var(--border); }
+.data-table td { padding:10px 10px; font-size:0.83rem; border-bottom:1px solid var(--border); vertical-align:middle; }
+.data-table tr:last-child td { border-bottom:none; }
+.data-table tr:hover td { background:var(--surface2); }
+.copy-card { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 14px; margin-bottom:8px; }
+.copy-card-title { font-size:0.78rem; font-weight:800; color:var(--accent); margin-bottom:6px; }
+.copy-card-text { font-size:0.85rem; color:var(--text2); line-height:1.6; white-space:pre-wrap; }
+.notes-textarea {
+  width:100%; background:rgba(108,99,255,0.05); border:1px solid var(--border);
+  border-radius:var(--radius-sm); color:var(--text); font-family:'Heebo',sans-serif;
+  font-size:0.88rem; padding:12px 14px; outline:none; resize:vertical;
+  min-height:140px; text-align:right; transition:border-color 0.2s;
+  color-scheme:dark;
+}
+.notes-textarea:focus { border-color:rgba(108,99,255,0.5); box-shadow: 0 0 0 3px rgba(108,99,255,0.1); }
+.autosave-hint { font-size:0.72rem; color:var(--text4); margin-top:6px; }
+
+/* ===== TAGS & BADGES ===== */
+.badge {
+  padding:3px 9px; border-radius:20px;
+  font-size:0.7rem; font-weight:800; display:inline-flex; align-items:center; gap:3px;
+}
+.badge-draft { background:rgba(108,99,255,0.1); color:var(--text3); border:1px solid rgba(108,99,255,0.2); }
+.badge-pending { background:var(--orange-light); color:var(--orange); }
+.badge-approved { background:var(--teal-light); color:var(--teal); }
+.badge-published { background:var(--green-light); color:var(--green); }
+.badge-active { background:var(--green-light); color:var(--green); }
+.badge-done { background:var(--surface3); color:var(--text3); }
+.badge-paid { background:var(--green-light); color:var(--green); }
+.badge-unpaid { background:var(--red-light); color:var(--red); }
+.plat-tag { padding:2px 7px; border-radius:4px; font-size:0.68rem; font-weight:800; }
+.plat-fb { background:#e7f0fd; color:#1877f2; }
+.plat-ig { background:#fde7f3; color:#e1306c; }
+.plat-gg { background:#e8f5e9; color:#34a853; }
+.plat-tt { background:#f0e7ff; color:#a855f7; }
+
+/* ===== STATUS CYCLE BTN ===== */
+.status-btn {
+  border:none; cursor:pointer; font-family:'Heebo',sans-serif; padding:3px 10px;
+  border-radius:20px; font-size:0.7rem; font-weight:800; transition:opacity 0.15s;
+}
+.status-btn:hover { opacity:0.75; }
+
+/* ===== ACTION BTNS ===== */
+.btn-primary {
+  background:linear-gradient(135deg,#4338ca,#6c63ff); color:#fff; border:none;
+  padding:8px 18px; border-radius:var(--radius-sm);
+  font-size:0.82rem; font-weight:800; cursor:pointer;
+  font-family:'Heebo',sans-serif; transition:all 0.2s;
+  box-shadow:0 3px 16px rgba(108,99,255,0.4);
+}
+.btn-primary:hover { background:linear-gradient(135deg,#6c63ff,#22d3ee); transform:translateY(-1px); box-shadow:0 6px 20px rgba(108,99,255,0.5); }
+.btn-secondary {
+  background:rgba(108,99,255,0.08); color:var(--text2); border:1px solid var(--border);
+  padding:8px 16px; border-radius:var(--radius-sm);
+  font-size:0.82rem; font-weight:700; cursor:pointer;
+  font-family:'Heebo',sans-serif; transition:all 0.15s;
+}
+.btn-secondary:hover { border-color:var(--border2); color:var(--text); background:rgba(108,99,255,0.15); }
+.btn-icon {
+  background:none; border:none; cursor:pointer; color:var(--text3);
+  padding:4px 8px; border-radius:var(--radius-xs); font-size:0.75rem;
+  font-family:'Heebo',sans-serif; transition:all 0.15s;
+}
+.btn-icon:hover { background:var(--surface3); color:var(--text); }
+.btn-icon.del:hover { background:var(--red-light); color:var(--red); }
+.section-action-bar { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+.section-label { font-size:0.78rem; font-weight:800; color:var(--text3); letter-spacing:0.5px; text-transform:uppercase; }
+
+/* ===== EMPTY STATE ===== */
+.empty { text-align:center; padding:50px 20px; color:var(--text3); }
+.empty-icon { font-size:2.5rem; margin-bottom:12px; }
+.empty h3 { font-size:0.92rem; color:var(--text2); margin-bottom:6px; }
+.empty p { font-size:0.8rem; }
+
+/* ===== MODALS ===== */
+.modal-overlay {
+  position:fixed; inset:0;
+  background:rgba(5,5,18,0.7);
+  display:none; align-items:center; justify-content:center;
+  z-index:500; padding:20px;
+  backdrop-filter:blur(8px);
+}
+.modal-overlay.open { display:flex; }
+.modal {
+  background:var(--surface); border-radius:20px;
+  padding:26px; width:100%; max-width:460px;
+  max-height:90vh; overflow-y:auto;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.7), 0 0 0 1px rgba(108,99,255,0.2);
+  animation:fadeUp 0.2s ease;
+}
+@keyframes fadeUp { from{transform:translateY(16px);opacity:0} to{transform:translateY(0);opacity:1} }
+.modal-title { font-size:1.05rem; font-weight:900; margin-bottom:20px; color:var(--text); }
+.form-group { margin-bottom:14px; }
+.form-group label { display:block; font-size:0.72rem; font-weight:800; color:var(--text2); margin-bottom:6px; letter-spacing:0.3px; }
+.form-group input, .form-group select, .form-group textarea {
+  width:100%; background:rgba(108,99,255,0.06); border:1.5px solid var(--border);
+  border-radius:var(--radius-sm); color:var(--text); font-family:'Heebo',sans-serif;
+  font-size:0.88rem; padding:9px 12px; outline:none; transition:border-color 0.2s; text-align:right;
+  color-scheme: dark;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:rgba(108,99,255,0.6); box-shadow: 0 0 0 3px rgba(108,99,255,0.1); }
+.form-group textarea { resize:vertical; min-height:80px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.cb-group { display:flex; gap:14px; flex-wrap:wrap; }
+.cb-label { display:flex; align-items:center; gap:6px; font-size:0.82rem; color:var(--text2); cursor:pointer; }
+.cb-label input { width:auto; }
+.modal-footer { display:flex; gap:8px; justify-content:flex-start; margin-top:20px; }
+.btn-danger {
+  background:var(--red-light); color:var(--red); border:1px solid rgba(239,68,68,0.2);
+  padding:8px 16px; border-radius:var(--radius-sm);
+  font-size:0.82rem; font-weight:700; cursor:pointer;
+  font-family:'Heebo',sans-serif; margin-right:auto;
+}
+
+
+/* ===== GLOWING PARTICLES ===== */
+.particle {
+  position:fixed; border-radius:50%; pointer-events:none;
+  animation: floatUp linear infinite;
+  z-index:0;
+}
+@keyframes floatUp {
+  0% { transform:translateY(100vh) scale(0); opacity:0; }
+  10% { opacity:1; }
+  90% { opacity:0.3; }
+  100% { transform:translateY(-10vh) scale(1); opacity:0; }
+}
+/* ===== TOAST ===== */
+.toast-wrap { position:fixed; bottom:22px; left:50%; transform:translateX(-50%); z-index:9999; display:flex; flex-direction:column; gap:6px; align-items:center; pointer-events:none; }
+.toast { background:linear-gradient(135deg,#4338ca,#6c63ff); color:#fff; padding:9px 18px; border-radius:30px; font-size:0.8rem; font-weight:700; animation:toastIn 0.3s ease; white-space:nowrap; box-shadow:0 4px 20px rgba(108,99,255,0.4); }
+@keyframes toastIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* ===== WELCOME ===== */
+.welcome-panel { flex:1; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:14px; color:var(--text3); }
+.welcome-panel h2 { font-size:1.1rem; font-weight:800; color:var(--text2); }
+.welcome-panel p { font-size:0.85rem; }
+
+/* ===== MOBILE ===== */
+@media (max-width:768px) {
+  .sidebar { display:none; }
+  .cal-date-heb { display:none; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">Digital CRM ✦</div>
+  <div class="topbar-nav">
+    <button class="topbar-tab active" onclick="showWorkspace('calendar')">לוח חודשי</button>
+    <button class="topbar-tab" onclick="showWorkspace('client')">לקוח פעיל</button>
+  </div>
+  <div class="topbar-right">
+    <div class="today-badge" id="today-badge">—</div>
+    <button class="btn-add" onclick="openModal('modal-task')">+ משימה</button>
+    <button class="btn-add" style="background:var(--teal);box-shadow:0 2px 10px rgba(20,184,166,0.3)" onclick="openClientModal()">+ לקוח</button>
+    <button class="btn-add" style="background:rgba(34,211,238,0.15);border-color:rgba(34,211,238,0.3);font-size:0.72rem" onclick="exportData()" title="גיבוי נתונים">💾</button>
+    <button class="btn-add" style="background:rgba(34,211,238,0.15);border-color:rgba(34,211,238,0.3);font-size:0.72rem" onclick="importData()" title="ייבוא נתונים">📂</button>
+  </div>
+</div>
+
+<div class="workspace">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">לקוחות</div>
+      <div class="sidebar-search">
+        <input type="text" id="sidebar-search" placeholder="חיפוש..." oninput="renderSidebar()">
+        <span style="color:var(--text4);font-size:0.85rem">⌕</span>
+      </div>
+    </div>
+    <div class="clients-list" id="clients-list"></div>
+    <button class="sidebar-add-btn" onclick="openClientModal()">+ הוסף לקוח חדש</button>
+  </div>
+
+  <!-- CALENDAR WORKSPACE -->
+  <div id="ws-calendar" class="cal-area">
+    <div class="cal-header">
+      <button class="cal-nav-btn" onclick="changeMonth(-1)">›</button>
+      <button class="cal-nav-btn" onclick="changeMonth(1)">‹</button>
+      <div>
+        <div class="cal-month-title" id="cal-month-title">—</div>
+        <div class="cal-month-heb" id="cal-month-heb">—</div>
+      </div>
+      <button class="cal-today-btn" onclick="goToday()">היום</button>
+      <div class="cal-filter-wrap" id="cal-filters"></div>
+    </div>
+    <div class="cal-body">
+      <div class="cal-days-header" id="cal-days-header"></div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+  </div>
+
+  <!-- CLIENT PANEL WORKSPACE -->
+  <div id="ws-client" class="client-panel" style="display:none">
+    <div class="welcome-panel" id="client-welcome">
+      <div style="font-size:3rem">👈</div>
+      <h2>בחר לקוח מהרשימה</h2>
+      <p>לחץ על שם לקוח בצד כדי לפתוח את הפרופיל שלו</p>
+    </div>
+    <div id="client-detail" style="display:none;flex:1;flex-direction:column;overflow:hidden;display:none">
+      <div class="client-panel-header" id="client-ph"></div>
+      <div class="client-tabs" id="client-tabs-bar"></div>
+      <div class="client-tab-body" id="client-tab-body"></div>
+    </div>
+  </div>
+
+</div><!-- workspace -->
+
+<!-- DAY PANEL -->
+<div class="day-panel-overlay" id="day-overlay" onclick="closeDayPanel()"></div>
+<div class="day-panel" id="day-panel">
+  <div class="day-panel-header">
+    <div class="day-panel-title" id="dp-title">—</div>
+    <div class="day-panel-sub" id="dp-sub">—</div>
+    <button class="day-panel-close" onclick="closeDayPanel()">✕</button>
+  </div>
+  <div class="day-panel-body" id="dp-body"></div>
+  <button class="day-panel-add" id="dp-add-btn">+ הוסף משימה ליום זה</button>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-task">
+  <div class="modal">
+    <div class="modal-title" id="modal-task-title">משימה / פוסט חדש</div>
+    <div class="form-group">
+      <label>לקוח</label>
+      <select id="ft-client"></select>
+    </div>
+    <div class="form-group">
+      <label>נושא</label>
+      <input type="text" id="ft-topic" placeholder="למשל: פוסט מבצע, יצירת תוכן...">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>תאריך</label>
+        <input type="date" id="ft-date">
+      </div>
+      <div class="form-group">
+        <label>פלטפורמה</label>
+        <select id="ft-platform">
+          <option>Facebook</option><option>Instagram</option>
+          <option>Google</option><option>TikTok</option><option>הכל</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>סטטוס</label>
+        <select id="ft-status">
+          <option value="draft">טיוטה</option>
+          <option value="pending">ממתין לאישור</option>
+          <option value="approved">מאושר</option>
+          <option value="published">פורסם</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>סוג</label>
+        <select id="ft-type">
+          <option value="post">פוסט</option>
+          <option value="campaign">קמפיין</option>
+          <option value="report">דוח</option>
+          <option value="meeting">פגישה</option>
+          <option value="other">אחר</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>הערה</label>
+      <input type="text" id="ft-note" placeholder="הערה קצרה...">
+    </div>
+    <div class="modal-footer">
+      <button class="btn-primary" onclick="saveTask()">שמור</button>
+      <button class="btn-secondary" onclick="closeModal('modal-task')">ביטול</button>
+      <button class="btn-danger" id="del-task-btn" style="display:none" onclick="deleteTask()">מחק</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-client">
+  <div class="modal">
+    <div class="modal-title" id="modal-client-title">לקוח חדש</div>
+    <div class="form-group"><label>שם לקוח / עסק</label><input type="text" id="fc-name" placeholder="שם העסק"></div>
+    <div class="form-row">
+      <div class="form-group"><label>סוג עסק</label><input type="text" id="fc-type" placeholder="למשל: מאפרת"></div>
+      <div class="form-group"><label>סטטוס</label>
+        <select id="fc-status"><option value="active">פעיל</option><option value="pending">בהמתנה</option><option value="done">הסתיים</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>תאריך התחלה</label><input type="date" id="fc-start"></div>
+      <div class="form-group"><label>תאריך סיום</label><input type="date" id="fc-end"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>טלפון</label><input type="text" id="fc-phone" placeholder="050-0000000"></div>
+      <div class="form-group"><label>תקציב חודשי ₪</label><input type="number" id="fc-budget" placeholder="0"></div>
+    </div>
+    <div class="form-group"><label>תשלום</label>
+      <select id="fc-paid"><option value="unpaid">לא שולם</option><option value="paid">שולם</option></select>
+    </div>
+    <div class="form-group"><label>פלטפורמות</label>
+      <div class="cb-group">
+        <label class="cb-label"><input type="checkbox" id="fc-fb"> Facebook</label>
+        <label class="cb-label"><input type="checkbox" id="fc-ig"> Instagram</label>
+        <label class="cb-label"><input type="checkbox" id="fc-gg"> Google</label>
+        <label class="cb-label"><input type="checkbox" id="fc-tt"> TikTok</label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-primary" onclick="saveClient()">שמור</button>
+      <button class="btn-secondary" onclick="closeModal('modal-client')">ביטול</button>
+      <button class="btn-danger" id="del-client-btn" style="display:none" onclick="deleteClient()">מחק לקוח</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-copy">
+  <div class="modal">
+    <div class="modal-title">קופי חדש</div>
+    <div class="form-group"><label>כותרת</label><input type="text" id="fcp-title" placeholder="שם הקופי"></div>
+    <div class="form-group"><label>טקסט</label><textarea id="fcp-text" rows="5" placeholder="הדביק את הקופי..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn-primary" onclick="saveCopy()">שמור</button>
+      <button class="btn-secondary" onclick="closeModal('modal-copy')">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-agreement">
+  <div class="modal">
+    <div class="modal-title">הסכם / הצעת מחיר</div>
+    <div class="form-row">
+      <div class="form-group"><label>שם המסמך</label><input type="text" id="fa-name" placeholder="הסכם עבודה..."></div>
+      <div class="form-group"><label>סוג</label>
+        <select id="fa-type"><option>הסכם עבודה</option><option>הצעת מחיר</option><option>סיכום שיחה</option><option>אחר</option></select>
+      </div>
+    </div>
+    <div class="form-group"><label>סכום / פרטים</label><input type="text" id="fa-amount" placeholder="₪ סכום או פרטים"></div>
+    <div class="form-group"><label>תוכן</label><textarea id="fa-text" rows="4" placeholder="פרטי ההסכם..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn-primary" onclick="saveAgreement()">שמור</button>
+      <button class="btn-secondary" onclick="closeModal('modal-agreement')">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+// ===========================
+// STATE
+// ===========================
+let DB = { clients:[], tasks:[], copy:[], agreements:[] };
+let viewMonth = new Date();
+let selectedDay = null;
+let activeClientId = null;
+let activeClientTab = 'posts';
+let editingTaskId = null;
+let editingClientId = null;
+let currentWorkspace = 'calendar';
+
+const COLORS = ['#4f6ef7','#14b8a6','#f59e0b','#a855f7','#ef4444','#22c55e','#f97316','#06b6d4','#e11d48','#0ea5e9'];
+const STATUS_L = { draft:'טיוטה', pending:'ממתין לאישור', approved:'מאושר', published:'פורסם' };
+const STATUS_C = { draft:'badge-draft', pending:'badge-pending', approved:'badge-approved', published:'badge-published' };
+const TYPE_EMOJI = { post:'📝', campaign:'🚀', report:'📊', meeting:'🤝', other:'📌' };
+
+// Hebrew month names
+const HEB_MONTHS = ['תשרי','חשון','כסלו','טבת','שבט','אדר','ניסן','אייר','סיון','תמוז','אב','אלול'];
+const HEB_DAYS = ['א','ב','ג','ד','ה','ו','ז','ח','ט','י','יא','יב','יג','יד','טו','טז','יז','יח','יט','כ','כא','כב','כג','כד','כה','כו','כז','כח','כט','ל'];
+
+// ===========================
+// STORAGE
+// ===========================
+function loadDB() {
+  try {
+    const saved = localStorage.getItem('dcrm2-v1');
+    if (saved) DB = JSON.parse(saved);
+  } catch(e){ console.warn('Load error', e); }
+  init();
+}
+function saveDB() {
+  try { localStorage.setItem('dcrm2-v1', JSON.stringify(DB)); } catch(e){ console.warn('Save error', e); }
+}
+
+// ===========================
+// INIT
+// ===========================
+function init() {
+  updateTodayBadge();
+  renderSidebar();
+  renderCalendar();
+  buildCalFilters();
+}
+
+function updateTodayBadge() {
+  const d = new Date();
+  document.getElementById('today-badge').textContent =
+    d.toLocaleDateString('he-IL',{weekday:'short',day:'numeric',month:'long'});
+}
+
+// ===========================
+// WORKSPACE
+// ===========================
+function showWorkspace(ws) {
+  currentWorkspace = ws;
+  document.getElementById('ws-calendar').style.display = ws==='calendar' ? 'flex' : 'none';
+  document.getElementById('ws-client').style.display = ws==='client' ? 'flex' : 'none';
+  document.querySelectorAll('.topbar-tab').forEach((t,i) => t.classList.toggle('active', i===(ws==='calendar'?0:1)));
+  if (ws==='client' && activeClientId) renderClientDetail(activeClientId);
+}
+
+// ===========================
+// SIDEBAR
+// ===========================
+function renderSidebar() {
+  const q = (document.getElementById('sidebar-search').value||'').toLowerCase();
+  const list = document.getElementById('clients-list');
+  const filtered = DB.clients.filter(c => c.name.toLowerCase().includes(q));
+  if (!filtered.length) {
+    list.innerHTML = `<div style="padding:20px;text-align:center;color:var(--text4);font-size:0.8rem">אין לקוחות</div>`;
+    return;
+  }
+  list.innerHTML = filtered.map((c,i) => {
+    const color = COLORS[DB.clients.indexOf(c) % COLORS.length];
+    const taskCount = DB.tasks.filter(t=>t.clientId===c.id).length;
+    return `
+    <div class="client-item${activeClientId===c.id?' active':''}" onclick="selectClient('${c.id}')">
+      <div class="client-avatar" style="background:${color}">${c.name[0]}</div>
+      <div class="client-item-info">
+        <div class="client-item-name">${c.name}</div>
+        <div class="client-item-sub">${c.type||''} · ${taskCount} משימות</div>
+      </div>
+      <div class="client-item-dot dot-${c.status||'active'}"></div>
+    </div>`;
+  }).join('');
+}
+
+function selectClient(id) {
+  activeClientId = id;
+  renderSidebar();
+  showWorkspace('client');
+}
+
+// ===========================
+// CLIENT DETAIL
+// ===========================
+function renderClientDetail(id) {
+  const c = DB.clients.find(x=>x.id===id);
+  if (!c) return;
+  const color = COLORS[DB.clients.indexOf(c)%COLORS.length];
+  document.getElementById('client-welcome').style.display = 'none';
+  const det = document.getElementById('client-detail');
+  det.style.display = 'flex';
+
+  // Header
+  document.getElementById('client-ph').innerHTML = `
+    <div class="client-panel-avatar" style="background:${color}">${c.name[0]}</div>
+    <div>
+      <div class="client-panel-name">${c.name}</div>
+      <div class="client-panel-sub">${c.type||''} · ${c.phone||''}</div>
+    </div>
+    <div class="client-panel-actions">
+      <span class="badge badge-${c.status||'active'}">${{active:'פעיל',pending:'בהמתנה',done:'הסתיים'}[c.status]||''}</span>
+      <button class="btn-secondary" onclick="openClientEditModal('${c.id}')">עריכה</button>
+    </div>`;
+
+  // Tabs
+  const tabs = [
+    {id:'posts',label:'📝 פוסטים'},
+    {id:'campaign',label:'🚀 קמפיין'},
+    {id:'copy',label:'💬 קופי'},
+    {id:'agreements',label:'📄 הסכמים'},
+    {id:'price',label:'💰 הצעת מחיר'},
+    {id:'notes',label:'🗒️ הערות'},
+  ];
+  document.getElementById('client-tabs-bar').innerHTML = tabs.map(t=>
+    `<button class="client-tab${activeClientTab===t.id?' active':''}" onclick="switchClientTab('${t.id}')">${t.label}</button>`
+  ).join('');
+  renderClientTabContent(id);
+}
+
+function switchClientTab(tab) {
+  activeClientTab = tab;
+  document.querySelectorAll('.client-tab').forEach((t,i)=>{
+    const tabs=['posts','campaign','copy','agreements','price','notes'];
+    t.classList.toggle('active',tabs[i]===tab);
+  });
+  renderClientTabContent(activeClientId);
+}
+
+function renderClientTabContent(id) {
+  const c = DB.clients.find(x=>x.id===id);
+  const body = document.getElementById('client-tab-body');
+
+  if (activeClientTab==='posts') {
+    const items = DB.tasks.filter(t=>t.clientId===id&&t.type==='post').sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+    body.innerHTML = `
+      <div class="section-action-bar"><div class="section-label">פוסטים</div><button class="btn-primary" onclick="openTaskModal(null,'${id}','post')">+ פוסט</button></div>
+      ${items.length?`<div style="overflow-x:auto"><table class="data-table"><thead><tr><th>תאריך</th><th>נושא</th><th>פלטפורמה</th><th>סטטוס</th><th></th></tr></thead><tbody>
+        ${items.map(t=>`<tr>
+          <td>${t.date?new Date(t.date).toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit'}):'—'}</td>
+          <td>${t.topic||'—'}</td>
+          <td><span class="plat-tag plat-${platClass(t.platform)}">${t.platform||'—'}</span></td>
+          <td><button class="status-btn ${STATUS_C[t.status]}" onclick="cycleStatus('${t.id}')">${STATUS_L[t.status]||''}</button></td>
+          <td><button class="btn-icon" onclick="openTaskModal('${t.id}')">✎</button><button class="btn-icon del" onclick="deleteTaskById('${t.id}')">✕</button></td>
+        </tr>`).join('')}
+      </tbody></table></div>`:emptyHTML('אין פוסטים','לחץ + פוסט להוסיף')}`;
+
+  } else if (activeClientTab==='campaign') {
+    const items = DB.tasks.filter(t=>t.clientId===id&&t.type==='campaign');
+    body.innerHTML = `
+      <div class="section-action-bar"><div class="section-label">קמפיינים</div><button class="btn-primary" onclick="openTaskModal(null,'${id}','campaign')">+ קמפיין</button></div>
+      ${items.length?items.map(t=>`
+        <div class="info-card" style="margin-bottom:10px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <div style="font-weight:800;font-size:0.92rem">🚀 ${t.topic}</div>
+            <div style="display:flex;gap:6px;align-items:center">
+              <button class="status-btn ${STATUS_C[t.status]}" onclick="cycleStatus('${t.id}')">${STATUS_L[t.status]}</button>
+              <button class="btn-icon del" onclick="deleteTaskById('${t.id}')">✕</button>
+            </div>
+          </div>
+          <div style="font-size:0.78rem;color:var(--text3)">${t.date?new Date(t.date).toLocaleDateString('he-IL'):''} · ${t.platform||''} · ${t.note||''}</div>
+        </div>`).join(''):emptyHTML('אין קמפיינים','')}`;
+
+  } else if (activeClientTab==='copy') {
+    const items = DB.copy.filter(x=>x.clientId===id);
+    body.innerHTML = `
+      <div class="section-action-bar"><div class="section-label">בנק קופי</div><button class="btn-primary" onclick="openCopyModal('${id}')">+ קופי</button></div>
+      ${items.length?items.map(item=>`
+        <div class="copy-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <div class="copy-card-title">${item.title||'ללא כותרת'}</div>
+            <div style="display:flex;gap:4px">
+              <button class="btn-icon" onclick="copyClip('${item.id}')">העתק</button>
+              <button class="btn-icon del" onclick="deleteCopy('${item.id}')">✕</button>
+            </div>
+          </div>
+          <div class="copy-card-text">${(item.text||'').replace(/</g,'&lt;')}</div>
+        </div>`).join(''):emptyHTML('אין קופי','')}`;
+
+  } else if (activeClientTab==='agreements') {
+    const items = DB.agreements.filter(x=>x.clientId===id&&x.type!=='הצעת מחיר');
+    body.innerHTML = `
+      <div class="section-action-bar"><div class="section-label">הסכמים</div><button class="btn-primary" onclick="openAgreementModal('${id}','הסכם עבודה')">+ הסכם</button></div>
+      ${items.length?items.map(a=>`
+        <div class="info-card" style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <div style="font-weight:800">📄 ${a.name}</div>
+            <button class="btn-icon del" onclick="deleteAgreement('${a.id}')">✕</button>
+          </div>
+          <div style="font-size:0.78rem;color:var(--text3);margin-bottom:6px">${a.type} · ${a.amount||''} · ${a.date?new Date(a.date).toLocaleDateString('he-IL'):''}</div>
+          ${a.text?`<div style="font-size:0.83rem;color:var(--text2);white-space:pre-wrap">${a.text.replace(/</g,'&lt;')}</div>`:''}
+        </div>`).join(''):emptyHTML('אין הסכמים','')}`;
+
+  } else if (activeClientTab==='price') {
+    const items = DB.agreements.filter(x=>x.clientId===id&&x.type==='הצעת מחיר');
+    body.innerHTML = `
+      <div class="section-action-bar"><div class="section-label">הצעות מחיר</div><button class="btn-primary" onclick="openAgreementModal('${id}','הצעת מחיר')">+ הצעת מחיר</button></div>
+      ${items.length?items.map(a=>`
+        <div class="info-card" style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <div style="font-weight:800">💰 ${a.name}</div>
+            <button class="btn-icon del" onclick="deleteAgreement('${a.id}')">✕</button>
+          </div>
+          ${a.amount?`<div style="font-size:1.1rem;font-weight:900;color:var(--green);margin-bottom:4px">${a.amount}</div>`:''}
+          <div style="font-size:0.78rem;color:var(--text3);margin-bottom:6px">${a.date?new Date(a.date).toLocaleDateString('he-IL'):''}</div>
+          ${a.text?`<div style="font-size:0.83rem;color:var(--text2);white-space:pre-wrap">${a.text.replace(/</g,'&lt;')}</div>`:''}
+        </div>`).join(''):emptyHTML('אין הצעות מחיר','')}`;
+
+  } else if (activeClientTab==='notes') {
+    body.innerHTML = `
+      <div class="section-label" style="margin-bottom:10px">הערות ופרטים</div>
+      <div class="info-card" style="margin-bottom:14px">
+        <div class="info-fields">
+          ${infoField('תאריך התחלה',c.start?new Date(c.start).toLocaleDateString('he-IL'):'—')}
+          ${infoField('תאריך סיום',c.end?new Date(c.end).toLocaleDateString('he-IL'):'—')}
+          ${infoField('תקציב חודשי',c.budget?'₪'+Number(c.budget).toLocaleString():'—')}
+          ${infoField('תשלום',c.paid==='paid'?'שולם ✓':'לא שולם ⚠️')}
+          ${infoField('פלטפורמות',(c.platforms||[]).join(', ')||'—')}
+        </div>
+      </div>
+      <textarea class="notes-textarea" id="client-notes" oninput="saveClientNotes('${id}')">${c.notes||''}</textarea>
+      <div class="autosave-hint">נשמר אוטומטית ✓</div>`;
+  }
+}
+
+function infoField(label,val) { return `<div class="info-field"><label>${label}</label><span>${val}</span></div>`; }
+function emptyHTML(h,p) { return `<div class="empty"><div class="empty-icon">📋</div><h3>${h}</h3><p>${p}</p></div>`; }
+function platClass(p) { return {Facebook:'fb',Instagram:'ig',Google:'gg',TikTok:'tt'}[p]||''; }
+
+function saveClientNotes(id) {
+  const c = DB.clients.find(x=>x.id===id);
+  if (c) { c.notes = document.getElementById('client-notes').value; saveDB(); }
+}
+
+// ===========================
+// CALENDAR
+// ===========================
+function buildCalFilters() {
+  // will rebuild dynamically based on clients
+}
+
+function renderCalendar() {
+  const y = viewMonth.getFullYear();
+  const m = viewMonth.getMonth();
+
+  // Header
+  document.getElementById('cal-month-title').textContent =
+    new Date(y,m,1).toLocaleDateString('he-IL',{month:'long',year:'numeric'});
+
+  // Hebrew month approx
+  const heb = toHebrewMonth(y, m+1);
+  document.getElementById('cal-month-heb').textContent = heb;
+
+  // Days header — Sunday first (Israeli style)
+  const dayNames = ['א׳','ב׳','ג׳','ד׳','ה׳','ו׳','ש׳'];
+  const dayNamesLong = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  document.getElementById('cal-days-header').innerHTML = dayNames.map((d,i)=>
+    `<div class="cal-day-name${i===6?' weekend':''}">${d}</div>`
+  ).join('');
+
+  // Grid
+  const firstDay = new Date(y,m,1).getDay(); // 0=Sun
+  const daysInMonth = new Date(y,m+1,0).getDate();
+  const daysInPrev = new Date(y,m,0).getDate();
+  const today = new Date();
+
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+
+  let cells = [];
+  // Prev month cells
+  for (let i=firstDay-1; i>=0; i--) {
+    cells.push({day:daysInPrev-i, month:m-1, year:y, other:true});
+  }
+  // This month
+  for (let d=1; d<=daysInMonth; d++) {
+    cells.push({day:d, month:m, year:y, other:false});
+  }
+  // Next month
+  while (cells.length < 42) {
+    cells.push({day:cells.length-firstDay-daysInMonth+1, month:m+1, year:y, other:true});
+  }
+
+  cells.forEach(cell => {
+    const dateStr = `${cell.year}-${String(cell.month+1).padStart(2,'0')}-${String(cell.day).padStart(2,'0')}`;
+    const isToday = !cell.other && cell.day===today.getDate() && cell.month===today.getMonth() && cell.year===today.getFullYear();
+    const isSat = new Date(cell.year,cell.month,cell.day).getDay()===6;
+    const tasks = DB.tasks.filter(t=>t.date===dateStr);
+    const hebDay = HEB_DAYS[toHebrewDay(cell.year, cell.month+1, cell.day)-1] || '';
+
+    const div = document.createElement('div');
+    div.className = `cal-cell${cell.other?' other-month':''}${isToday?' today':''}${isSat?' shabbat':''}`;
+    div.onclick = () => openDayPanel(dateStr);
+
+    let pillsHtml = '';
+    const maxShow = 3;
+    tasks.slice(0, maxShow).forEach(t => {
+      const client = DB.clients.find(c=>c.id===t.clientId);
+      const color = client ? COLORS[DB.clients.indexOf(client)%COLORS.length] : '#4f6ef7';
+      const bg = color+'22'; const fc = color;
+      pillsHtml += `<button class="cal-task-pill" style="background:${bg};color:${fc}" onclick="event.stopPropagation();openTaskModal('${t.id}')">${TYPE_EMOJI[t.type]||'📝'} ${t.topic||'משימה'}</button>`;
+    });
+    if (tasks.length > maxShow) pillsHtml += `<div class="cal-more">+${tasks.length-maxShow} עוד</div>`;
+
+    div.innerHTML = `
+      <div class="cal-date">
+        <div class="cal-date-inner">${cell.day}</div>
+        <div class="cal-date-heb">${hebDay}</div>
+      </div>
+      <div class="cal-tasks">${pillsHtml}</div>`;
+    grid.appendChild(div);
+  });
+}
+
+function changeMonth(d) { viewMonth.setMonth(viewMonth.getMonth()+d); renderCalendar(); }
+function goToday() { viewMonth = new Date(); renderCalendar(); }
+
+// ===========================
+// DAY PANEL
+// ===========================
+function openDayPanel(dateStr) {
+  selectedDay = dateStr;
+  const d = new Date(dateStr+'T12:00:00');
+  document.getElementById('dp-title').textContent = d.toLocaleDateString('he-IL',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const hebStr = toHebrewDateStr(d.getFullYear(), d.getMonth()+1, d.getDate());
+  document.getElementById('dp-sub').textContent = hebStr;
+
+  const tasks = DB.tasks.filter(t=>t.date===dateStr);
+  const body = document.getElementById('dp-body');
+  if (!tasks.length) {
+    body.innerHTML = `<div class="empty"><div class="empty-icon">✨</div><h3>אין משימות היום</h3><p>לחץ למטה להוסיף</p></div>`;
+  } else {
+    body.innerHTML = tasks.map(t => {
+      const c = DB.clients.find(x=>x.id===t.clientId);
+      const color = c ? COLORS[DB.clients.indexOf(c)%COLORS.length] : '#4f6ef7';
+      return `
+      <div class="day-task-card" style="border-right-color:${color}">
+        <div class="day-task-header">
+          <div class="day-task-client">${c?c.name:'—'}</div>
+          <div style="margin-right:auto;display:flex;gap:4px">
+            <button class="btn-icon" onclick="openTaskModal('${t.id}')">✎</button>
+            <button class="btn-icon del" onclick="deleteTaskById('${t.id}');openDayPanel('${dateStr}')">✕</button>
+          </div>
+        </div>
+        <div class="day-task-topic">${TYPE_EMOJI[t.type]||'📝'} ${t.topic||'—'}</div>
+        <div class="day-task-meta">
+          <span class="badge ${STATUS_C[t.status]}">${STATUS_L[t.status]||''}</span>
+          ${t.platform?`<span class="plat-tag plat-${platClass(t.platform)}">${t.platform}</span>`:''}
+          ${t.note?`<span style="font-size:0.75rem;color:var(--text3)">${t.note}</span>`:''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  document.getElementById('dp-add-btn').onclick = () => openTaskModal(null, null, 'post', dateStr);
+  document.getElementById('day-panel').classList.add('open');
+  document.getElementById('day-overlay').classList.add('open');
+}
+function closeDayPanel() {
+  document.getElementById('day-panel').classList.remove('open');
+  document.getElementById('day-overlay').classList.remove('open');
+}
+
+// ===========================
+// TASK MODAL
+// ===========================
+function openTaskModal(id, clientId, type, date) {
+  editingTaskId = id || null;
+  populateSelect('ft-client');
+  const t = id ? DB.tasks.find(x=>x.id===id) : null;
+  document.getElementById('modal-task-title').textContent = t ? 'עריכת משימה' : 'משימה חדשה';
+  document.getElementById('ft-client').value = t?.clientId || clientId || (DB.clients[0]?.id||'');
+  document.getElementById('ft-topic').value = t?.topic || '';
+  document.getElementById('ft-date').value = t?.date || date || new Date().toISOString().slice(0,10);
+  document.getElementById('ft-platform').value = t?.platform || 'Facebook';
+  document.getElementById('ft-status').value = t?.status || 'draft';
+  document.getElementById('ft-type').value = t?.type || type || 'post';
+  document.getElementById('ft-note').value = t?.note || '';
+  document.getElementById('del-task-btn').style.display = t ? 'block' : 'none';
+  openModal('modal-task');
+}
+function saveTask() {
+  const topic = document.getElementById('ft-topic').value.trim();
+  if (!topic) { toast('חסר נושא'); return; }
+  const data = {
+    clientId: document.getElementById('ft-client').value,
+    topic, date: document.getElementById('ft-date').value,
+    platform: document.getElementById('ft-platform').value,
+    status: document.getElementById('ft-status').value,
+    type: document.getElementById('ft-type').value,
+    note: document.getElementById('ft-note').value
+  };
+  if (editingTaskId) {
+    const idx = DB.tasks.findIndex(x=>x.id===editingTaskId);
+    DB.tasks[idx] = {...DB.tasks[idx],...data};
+    toast('משימה עודכנה ✓');
+  } else {
+    DB.tasks.push({id:'t'+Date.now(),...data});
+    toast('משימה נוספה ✓');
+  }
+  saveDB(); closeModal('modal-task'); renderCalendar();
+  if (activeClientId) renderClientDetail(activeClientId);
+  if (selectedDay) openDayPanel(selectedDay);
+}
+function deleteTask() {
+  if (!editingTaskId) return;
+  DB.tasks = DB.tasks.filter(x=>x.id!==editingTaskId);
+  saveDB(); closeModal('modal-task'); renderCalendar();
+  if (activeClientId) renderClientDetail(activeClientId);
+  if (selectedDay) openDayPanel(selectedDay);
+  toast('נמחק');
+}
+function deleteTaskById(id) {
+  DB.tasks = DB.tasks.filter(x=>x.id!==id);
+  saveDB(); renderCalendar();
+  if (activeClientId) renderClientDetail(activeClientId);
+  toast('נמחק');
+}
+function cycleStatus(id) {
+  const t = DB.tasks.find(x=>x.id===id);
+  if (!t) return;
+  const c = ['draft','pending','approved','published'];
+  t.status = c[(c.indexOf(t.status)+1)%c.length];
+  saveDB(); renderCalendar();
+  if (activeClientId) renderClientDetail(activeClientId);
+  if (selectedDay) openDayPanel(selectedDay);
+  toast(STATUS_L[t.status]);
+}
+
+// ===========================
+// CLIENT MODAL
+// ===========================
+function openClientModal() { openClientEditModal(null); }
+function openClientEditModal(id) {
+  editingClientId = id;
+  const c = id ? DB.clients.find(x=>x.id===id) : null;
+  document.getElementById('modal-client-title').textContent = c ? 'עריכת לקוח' : 'לקוח חדש';
+  document.getElementById('fc-name').value = c?.name||'';
+  document.getElementById('fc-type').value = c?.type||'';
+  document.getElementById('fc-status').value = c?.status||'active';
+  document.getElementById('fc-start').value = c?.start||'';
+  document.getElementById('fc-end').value = c?.end||'';
+  document.getElementById('fc-phone').value = c?.phone||'';
+  document.getElementById('fc-budget').value = c?.budget||'';
+  document.getElementById('fc-paid').value = c?.paid||'unpaid';
+  const p=c?.platforms||[];
+  document.getElementById('fc-fb').checked=p.includes('Facebook');
+  document.getElementById('fc-ig').checked=p.includes('Instagram');
+  document.getElementById('fc-gg').checked=p.includes('Google');
+  document.getElementById('fc-tt').checked=p.includes('TikTok');
+  document.getElementById('del-client-btn').style.display = c?'block':'none';
+  openModal('modal-client');
+}
+function saveClient() {
+  const name = document.getElementById('fc-name').value.trim();
+  if (!name) { toast('שם חובה'); return; }
+  const platforms=[];
+  if(document.getElementById('fc-fb').checked)platforms.push('Facebook');
+  if(document.getElementById('fc-ig').checked)platforms.push('Instagram');
+  if(document.getElementById('fc-gg').checked)platforms.push('Google');
+  if(document.getElementById('fc-tt').checked)platforms.push('TikTok');
+  const data={name,type:document.getElementById('fc-type').value.trim(),status:document.getElementById('fc-status').value,
+    start:document.getElementById('fc-start').value,end:document.getElementById('fc-end').value,
+    phone:document.getElementById('fc-phone').value.trim(),budget:document.getElementById('fc-budget').value,
+    paid:document.getElementById('fc-paid').value,platforms};
+  if(editingClientId){
+    const idx=DB.clients.findIndex(x=>x.id===editingClientId);
+    DB.clients[idx]={...DB.clients[idx],...data};
+    toast('לקוח עודכן ✓');
+    if(activeClientId===editingClientId) renderClientDetail(editingClientId);
+  } else {
+    const id='c'+Date.now();
+    DB.clients.push({id,notes:'',...data});
+    activeClientId=id;
+    toast('לקוח נוסף ✓');
+  }
+  saveDB(); closeModal('modal-client'); renderSidebar();
+}
+function deleteClient() {
+  if(!editingClientId)return;
+  if(!confirm('למחוק לקוח וכל הנתונים?'))return;
+  DB.clients=DB.clients.filter(x=>x.id!==editingClientId);
+  DB.tasks=DB.tasks.filter(x=>x.clientId!==editingClientId);
+  DB.copy=DB.copy.filter(x=>x.clientId!==editingClientId);
+  DB.agreements=DB.agreements.filter(x=>x.clientId!==editingClientId);
+  if(activeClientId===editingClientId){activeClientId=null;document.getElementById('client-welcome').style.display='flex';document.getElementById('client-detail').style.display='none';}
+  saveDB();closeModal('modal-client');renderSidebar();renderCalendar();toast('נמחק');
+}
+
+// ===========================
+// COPY
+// ===========================
+let copyClientId=null;
+function openCopyModal(id){copyClientId=id;document.getElementById('fcp-title').value='';document.getElementById('fcp-text').value='';openModal('modal-copy');}
+function saveCopy(){
+  const text=document.getElementById('fcp-text').value.trim();
+  if(!text){toast('חסר טקסט');return;}
+  DB.copy.push({id:'cp'+Date.now(),clientId:copyClientId,title:document.getElementById('fcp-title').value.trim(),text});
+  saveDB();closeModal('modal-copy');if(activeClientId)renderClientDetail(activeClientId);toast('קופי נוסף ✓');
+}
+function deleteCopy(id){DB.copy=DB.copy.filter(x=>x.id!==id);saveDB();if(activeClientId)renderClientDetail(activeClientId);}
+function copyClip(id){const i=DB.copy.find(x=>x.id===id);if(i)navigator.clipboard.writeText(i.text).then(()=>toast('הועתק ✓'));}
+
+// ===========================
+// AGREEMENTS
+// ===========================
+let agreementClientId=null,agreementDefaultType=null;
+function openAgreementModal(id,type){
+  agreementClientId=id;agreementDefaultType=type;
+  document.getElementById('fa-name').value='';document.getElementById('fa-type').value=type||'הסכם עבודה';
+  document.getElementById('fa-amount').value='';document.getElementById('fa-text').value='';
+  openModal('modal-agreement');
+}
+function saveAgreement(){
+  const name=document.getElementById('fa-name').value.trim();
+  if(!name){toast('חסר שם');return;}
+  DB.agreements.push({id:'a'+Date.now(),clientId:agreementClientId,name,type:document.getElementById('fa-type').value,
+    amount:document.getElementById('fa-amount').value,text:document.getElementById('fa-text').value,date:new Date().toISOString().slice(0,10)});
+  saveDB();closeModal('modal-agreement');if(activeClientId)renderClientDetail(activeClientId);toast('נשמר ✓');
+}
+function deleteAgreement(id){DB.agreements=DB.agreements.filter(x=>x.id!==id);saveDB();if(activeClientId)renderClientDetail(activeClientId);}
+
+// ===========================
+// HELPERS
+// ===========================
+function populateSelect(id){
+  document.getElementById(id).innerHTML=DB.clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+}
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+
+function toast(msg){
+  const el=document.createElement('div');el.className='toast';el.textContent=msg;
+  document.getElementById('toast-wrap').appendChild(el);
+  setTimeout(()=>el.remove(),2200);
+}
+
+// ===========================
+// HEBREW DATE (approximate)
+// ===========================
+function toHebrewMonth(gYear, gMonth) {
+  // Simple approximation for display
+  const epoch=new Date(gYear,gMonth-1,1);
+  const jewishYear=gYear+3760;
+  const approxMonth=((gMonth+8)%12);
+  const names=['ניסן','אייר','סיון','תמוז','אב','אלול','תשרי','חשון','כסלו','טבת','שבט','אדר'];
+  return names[approxMonth]||'' + ' ' + jewishYear;
+}
+
+function toHebrewDay(y,m,d) {
+  // Simple Julian-day based Hebrew day approximation
+  try {
+    const jd = gregorianToJD(y,m,d);
+    const hd = jdToHebrew(jd);
+    return hd.day;
+  } catch(e){ return d; }
+}
+function toHebrewDateStr(y,m,d) {
+  try {
+    const jd = gregorianToJD(y,m,d);
+    const hd = jdToHebrew(jd);
+    const dayStr = HEB_DAYS[hd.day-1]||'';
+    const monthStr = HEB_MONTHS[hd.month-1]||'';
+    return `${dayStr} ${monthStr} ${hebrewYear(hd.year)}`;
+  } catch(e){ return ''; }
+}
+function gregorianToJD(y,m,d) {
+  if(m<3){y--;m+=12;}
+  const A=Math.floor(y/100);
+  const B=2-A+Math.floor(A/4);
+  return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524;
+}
+function jdToHebrew(jd) {
+  const EPOCH=347997;
+  function isLeapYear(y){return((7*y)+1)%19<7;}
+  function monthsInYear(y){return isLeapYear(y)?13:12;}
+  function elapsedDays(y){
+    const months=Math.floor((235*y-234)/19);
+    const parts=12084+13753*months;
+    let day=months*29+Math.floor(parts/25920);
+    if((3*(day+1))%7<3)day++;
+    return day;
+  }
+  function daysInYear(y){return elapsedDays(y+1)-elapsedDays(y);}
+  function longCheshvan(y){return daysInYear(y)%10===5;}
+  function shortKislev(y){return daysInYear(y)%10===3;}
+  function daysInMonth(m,y){
+    const days=[0,30,29,30,29,30,29,30,29,30,29,30,29,29];
+    if(m===2&&longCheshvan(y))return 30;
+    if(m===3&&shortKislev(y))return 29;
+    if(m===12&&!isLeapYear(y))return 0;
+    if(m===13)return isLeapYear(y)?29:0;
+    return days[m]||29;
+  }
+  let year=Math.floor((jd-EPOCH)*98496/35975351);
+  while(elapsedDays(year+1)+EPOCH<=jd)year++;
+  let month=jd<gregorianToJD(1,1,1)?7:(elapsedDays(year)+EPOCH>jd?7:1);
+  while(true){const dim=daysInMonth(month,year);if(dim===0){month++;continue;}if(jd<=elapsedDays(year)+EPOCH+[0,0,30,59,88,117,147,176,206,235,265,294,324,353,383].slice(0,month+1).reduce((a,b)=>a+b,0)-[0,0,30,59,88,117,147,176,206,235,265,294,324,353,383][month])break;month++;}
+  const day=jd-elapsedDays(year)-EPOCH-([0,0,30,59,88,117,147,176,206,235,265,294,324,353][Math.min(month,13)]||0)+1;
+  return {year,month,day:Math.max(1,Math.min(day,30))};
+}
+function hebrewYear(y) {
+  const letters=['','א','ב','ג','ד','ה','ו','ז','ח','ט','י','יא','יב','יג','יד','טו','טז','יז','יח','יט','כ'];
+  const thou=Math.floor(y/1000);const rem=y%1000;
+  const hund=Math.floor(rem/100);const tens=Math.floor((rem%100)/10);const ones=rem%10;
+  const H=['','ק','ר','ש','ת'];const T=['','י','כ','ל','מ','נ','ס','ע','פ','צ'];const O=['','א','ב','ג','ד','ה','ו','ז','ח','ט'];
+  return `תש${T[tens]}${O[ones]}`;
+}
+
+
+// ===========================
+// DATA BACKUP
+// ===========================
+function exportData() {
+  const blob = new Blob([JSON.stringify(DB, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'digital-crm-backup-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  toast('גיבוי הורד ✓');
+}
+function importData() {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = '.json';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if (data.clients && data.tasks) {
+          DB = data; saveDB(); init();
+          toast('ייבוא הצליח ✓ ' + data.clients.length + ' לקוחות');
+        } else { toast('קובץ לא תקין'); }
+      } catch(e) { toast('שגיאה בקובץ'); }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+// ===========================
+// START
+// ===========================
+loadDB();
+</script>
+
+<script>
+// Create floating particles
+function createParticles() {
+  const colors = ['rgba(108,99,255,0.4)','rgba(34,211,238,0.3)','rgba(167,139,250,0.3)'];
+  for (let i = 0; i < 12; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 4 + 2;
+    p.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      box-shadow: 0 0 ${size*3}px ${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${8+Math.random()*12}s;
+      animation-delay:${-Math.random()*15}s;
+    `;
+    document.body.appendChild(p);
+  }
+}
+createParticles();
+</script>
+</body>
+</html>
