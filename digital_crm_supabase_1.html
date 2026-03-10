@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Digital CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0e1f;
+  --bg2: #111228;
+  --surface: #161830;
+  --surface2: #1c1e38;
+  --surface3: #222442;
+  --border: rgba(120,100,255,0.15);
+  --border2: rgba(120,100,255,0.28);
+  --accent: #6c63ff;
+  --accent-light: rgba(108,99,255,0.15);
+  --accent2: #8b83ff;
+  --accent-dark: #4f46e5;
+  --accent-grad: linear-gradient(135deg, #3b2fcf 0%, #6c63ff 50%, #22d3ee 100%);
+  --accent-grad2: linear-gradient(135deg, #4338ca 0%, #6c63ff 100%);
+  --teal: #22d3ee;
+  --teal-light: rgba(34,211,238,0.12);
+  --gold: #fbbf24;
+  --gold-light: rgba(251,191,36,0.12);
+  --green: #34d399;
+  --green-light: rgba(52,211,153,0.12);
+  --red: #f87171;
+  --red-light: rgba(248,113,113,0.12);
+  --orange: #fb923c;
+  --orange-light: rgba(251,146,60,0.12);
+  --purple: #a78bfa;
+  --purple-light: rgba(167,139,250,0.12);
+  --text: #e8e6f8;
+  --text2: #b8b4d8;
+  --text3: #7870a8;
+  --text4: #4a4570;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3), 0 0 0 1px rgba(108,99,255,0.06);
+  --shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(108,99,255,0.1);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(108,99,255,0.15);
+  --radius: 14px;
+  --radius-sm: 9px;
+  --radius-xs: 6px;
+  --glow: 0 0 20px rgba(108,99,255,0.3);
+  --glow-teal: 0 0 20px rgba(34,211,238,0.3);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body { height:100%; font-family:'Heebo',sans-serif; background:var(--bg); color:var(--text); overflow:hidden; }
+
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:
+    linear-gradient(rgba(108,99,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(108,99,255,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+body::after {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background: radial-gradient(ellipse 60% 50% at 20% 20%, rgba(108,99,255,0.08) 0%, transparent 70%),
+              radial-gradient(ellipse 40% 40% at 80% 80%, rgba(34,211,238,0.05) 0%, transparent 70%);
+}
+
+::-webkit-scrollbar { width:4px; height:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:linear-gradient(180deg,#6c63ff,#22d3ee); border-radius:3px; }
+
+.app { display:flex; flex-direction:column; height:100vh; position:relative; z-index:1; }
+
+.topbar {
+  display:flex; align-items:center; gap:14px;
+  padding:0 20px; height:58px;
+  background: rgba(13,14,31,0.95);
+  border-bottom: 1px solid rgba(108,99,255,0.2);
+  box-shadow: 0 1px 0 rgba(108,99,255,0.15), 0 4px 24px rgba(0,0,0,0.4);
+  flex-shrink:0; z-index:50;
+  position:relative;
+  backdrop-filter: blur(20px);
+}
+
+.topbar::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background: linear-gradient(90deg, transparent, rgba(108,99,255,0.7), rgba(34,211,238,0.5), transparent);
+  pointer-events:none;
+}
+
+.logo {
+  font-size:1.1rem; font-weight:900; letter-spacing:-0.5px;
+  background: linear-gradient(135deg, #c8c4ff 0%, #22d3ee 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  white-space:nowrap;
+}
+
+.topbar-nav { display:flex; gap:2px; background:rgba(108,99,255,0.1); padding:3px; border-radius:var(--radius-sm); border:1px solid rgba(108,99,255,0.25); }
+.topbar-tab {
+  padding:5px 14px; border-radius:7px;
+  font-size:0.8rem; font-weight:700;
+  cursor:pointer; color:var(--text3);
+  transition:all 0.15s; border:none; background:none;
+  font-family:'Heebo',sans-serif; white-space:nowrap;
+}
+.topbar-tab.active { background:rgba(108,99,255,0.28); color:#e8e6ff; box-shadow:0 2px 8px rgba(108,99,255,0.2); }
+.topbar-tab:hover:not(.active) { color:var(--text2); background:rgba(108,99,255,0.1); }
+
+.topbar-right { margin-right:auto; display:flex; align-items:center; gap:10px; }
+
+.workspace { display:flex; flex:1; overflow:hidden; }
+
+.sidebar {
+  width:270px; flex-shrink:0;
+  background:var(--surface);
+  border-left:1px solid var(--border);
+  display:flex; flex-direction:column;
+  overflow:hidden;
+  box-shadow: inset -1px 0 0 rgba(108,99,255,0.1);
+}
+
+.sidebar-header {
+  padding:14px 16px 10px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+
+.sidebar-title { font-size:0.78rem; font-weight:800; color:var(--text3); letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
+
+.sidebar-search {
+  display:flex; align-items:center; gap:6px;
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:6px 10px;
+}
+
+.sidebar-search input { background:none; border:none; outline:none; color:var(--text); font-family:'Heebo',sans-serif; font-size:0.82rem; width:100%; text-align:right; }
+.sidebar-search input::placeholder { color:var(--text4); }
+
+.clients-list { flex:1; overflow-y:auto; padding:8px; }
+
+.client-item {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 10px; border-radius:var(--radius-sm);
+  cursor:pointer; transition:all 0.15s;
+  margin-bottom:2px;
+  position:relative;
+}
+
+.client-item:hover { background:var(--surface2); }
+.client-item.active { background:linear-gradient(135deg, rgba(108,99,255,0.15), rgba(34,211,238,0.05)); border:1px solid rgba(108,99,255,0.25); }
+.client-item.active .client-item-name { color:#a8a4ff; font-weight:800; }
+
+.client-avatar {
+  width:34px; height:34px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.85rem; font-weight:800; color:#fff;
+  flex-shrink:0;
+  background: linear-gradient(135deg, #6c63ff, #22d3ee);
+}
+
+.client-item-info { flex:1; min-width:0; }
+.client-item-name { font-size:0.85rem; font-weight:700; color:var(--text); truncate; }
+.client-item-sub { font-size:0.72rem; color:var(--text3); margin-top:1px; }
+
+.sidebar-add-btn {
+  margin:8px; padding:9px; border-radius:var(--radius-sm);
+  background:rgba(108,99,255,0.08); color:#a8a4ff;
+  border:1.5px dashed rgba(108,99,255,0.35); cursor:pointer;
+  font-size:0.8rem; font-weight:700; text-align:center;
+  font-family:'Heebo',sans-serif; transition:all 0.15s; flex-shrink:0;
+}
+
+.sidebar-add-btn:hover { background:linear-gradient(135deg,rgba(108,99,255,0.4),rgba(34,211,238,0.2)); color:#e8e6ff; }
+
+.content-area { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+
+.loading { 
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  padding:20px; color:var(--text2);
+  font-size:0.9rem;
+}
+
+.loading::before {
+  content:''; width:16px; height:16px; border:2px solid rgba(108,99,255,0.3);
+  border-top-color:#6c63ff; border-radius:50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.content-tabs {
+  display:flex; gap:4px; padding:12px 16px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+  overflow-x:auto;
+  background:linear-gradient(180deg,rgba(108,99,255,0.04),transparent);
+}
+
+.content-tab {
+  padding:7px 14px; border-radius:var(--radius-xs);
+  font-size:0.8rem; font-weight:700;
+  cursor:pointer; transition:all 0.15s;
+  background:rgba(108,99,255,0.1); color:var(--text3);
+  border:1px solid transparent;
+  white-space:nowrap;
+}
+
+.content-tab.active {
+  background:rgba(108,99,255,0.25); color:#e8e6ff;
+  border:1px solid rgba(108,99,255,0.35); box-shadow:0 2px 8px rgba(108,99,255,0.15);
+}
+
+.content-tab:hover:not(.active) { background:rgba(108,99,255,0.15); color:var(--text2); }
+
+.tab-content { flex:1; overflow-y:auto; padding:16px; display:none; }
+.tab-content.active { display:flex; flex-direction:column; }
+
+.content-header {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:16px; gap:12px;
+}
+
+.content-header h3 { font-size:1rem; color:var(--text); }
+
+.btn-add-content {
+  display:flex; align-items:center; gap:5px;
+  background:linear-gradient(135deg, rgba(108,99,255,0.2), rgba(34,211,238,0.1));
+  color:#c8c4ff; border:1px solid rgba(108,99,255,0.35);
+  padding:7px 14px; border-radius:var(--radius-sm);
+  font-size:0.8rem; font-weight:800; cursor:pointer;
+  font-family:'Heebo',sans-serif;
+  transition:all 0.2s;
+  white-space:nowrap;
+}
+
+.btn-add-content:hover { 
+  background:rgba(108,99,255,0.35); 
+  transform:translateY(-1px); 
+  box-shadow:0 4px 16px rgba(108,99,255,0.25); 
+}
+
+.content-grid {
+  display:grid; 
+  grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+  gap:12px;
+  flex:1;
+  overflow-y:auto;
+}
+
+.content-card {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:var(--radius); padding:14px;
+  transition:all 0.2s;
+  position:relative;
+  overflow:hidden;
+}
+
+.content-card::before {
+  content:''; position:absolute; top:0; right:0;
+  width:100%; height:2px;
+  background:linear-gradient(90deg, transparent, rgba(108,99,255,0.5), transparent);
+}
+
+.content-card:hover {
+  background:var(--surface3);
+  border-color:rgba(108,99,255,0.35);
+  box-shadow:0 4px 16px rgba(108,99,255,0.15);
+}
+
+.content-card-header {
+  display:flex; justify-content:space-between; align-items:start;
+  margin-bottom:8px; gap:8px;
+}
+
+.content-card-title {
+  font-size:0.95rem; font-weight:800; color:var(--text);
+  flex:1; word-break:break-word;
+}
+
+.content-card-type {
+  font-size:0.65rem; font-weight:700; color:var(--teal);
+  background:var(--teal-light); padding:3px 8px;
+  border-radius:var(--radius-xs); white-space:nowrap;
+  text-transform:uppercase;
+}
+
+.content-card-meta {
+  display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;
+}
+
+.badge {
+  font-size:0.7rem; font-weight:600; padding:3px 8px;
+  border-radius:4px; white-space:nowrap;
+}
+
+.badge-platform { background:var(--gold-light); color:var(--gold); }
+.badge-status { background:var(--green-light); color:var(--green); }
+.badge-status.draft { background:var(--orange-light); color:var(--orange); }
+.badge-status.idea { background:var(--purple-light); color:var(--purple); }
+
+.content-card-text {
+  font-size:0.8rem; color:var(--text2); 
+  margin-bottom:10px; line-height:1.4;
+  max-height:60px; overflow:hidden; text-overflow:ellipsis;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+}
+
+.content-card-actions {
+  display:flex; gap:6px;
+  padding-top:10px; border-top:1px solid var(--border);
+}
+
+.btn-card {
+  flex:1; padding:6px 8px;
+  background:rgba(108,99,255,0.1); border:1px solid rgba(108,99,255,0.25);
+  color:var(--text2); border-radius:var(--radius-xs);
+  font-size:0.7rem; font-weight:700; cursor:pointer;
+  font-family:'Heebo',sans-serif; transition:all 0.2s;
+}
+
+.btn-card:hover { background:rgba(108,99,255,0.25); color:var(--text); }
+.btn-card.copy { background:var(--green-light); border-color:var(--green); color:var(--green); }
+.btn-card.copy:hover { background:var(--green); color:#fff; }
+.btn-card.delete { background:var(--red-light); border-color:var(--red); color:var(--red); }
+.btn-card.delete:hover { background:var(--red); color:#fff; }
+
+.empty-state {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:40px; text-align:center; flex:1;
+}
+
+.empty-icon {
+  font-size:3rem; margin-bottom:16px; opacity:0.3;
+}
+
+.empty-text { color:var(--text2); margin-bottom:16px; font-size:0.9rem; }
+
+/* Modal */
+.modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.6);
+  display:none; align-items:center; justify-content:center;
+  z-index:100; backdrop-filter:blur(4px);
+}
+
+.modal-overlay.open { display:flex; }
+
+.modal {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); padding:24px;
+  max-width:500px; width:90%;
+  max-height:90vh; overflow-y:auto;
+  box-shadow:var(--shadow-lg);
+}
+
+.modal h2 {
+  font-size:1.1rem; margin-bottom:20px; color:var(--text);
+}
+
+.form-group {
+  margin-bottom:16px;
+}
+
+.form-group label {
+  display:block; font-size:0.85rem; font-weight:700;
+  color:var(--text); margin-bottom:6px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width:100%; padding:10px 12px;
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:var(--radius-sm); color:var(--text);
+  font-family:'Heebo',sans-serif; font-size:0.9rem;
+  transition:all 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline:none; border-color:rgba(108,99,255,0.5);
+  background:var(--surface3);
+  box-shadow:0 0 0 3px rgba(108,99,255,0.1);
+}
+
+.form-group textarea { resize:vertical; min-height:100px; }
+
+.modal-actions {
+  display:flex; gap:10px; margin-top:24px;
+}
+
+.btn-primary {
+  flex:1; padding:10px;
+  background:linear-gradient(135deg, rgba(108,99,255,0.3), rgba(34,211,238,0.1));
+  color:#c8c4ff; border:1px solid rgba(108,99,255,0.4);
+  border-radius:var(--radius-sm); cursor:pointer;
+  font-size:0.85rem; font-weight:800;
+  font-family:'Heebo',sans-serif; transition:all 0.2s;
+}
+
+.btn-primary:hover {
+  background:rgba(108,99,255,0.35);
+  box-shadow:0 4px 16px rgba(108,99,255,0.25);
+}
+
+.btn-secondary {
+  flex:1; padding:10px;
+  background:transparent; color:var(--text2);
+  border:1px solid var(--border); border-radius:var(--radius-sm);
+  cursor:pointer; font-size:0.85rem; font-weight:800;
+  font-family:'Heebo',sans-serif; transition:all 0.2s;
+}
+
+.btn-secondary:hover {
+  border-color:rgba(108,99,255,0.35);
+  background:rgba(108,99,255,0.05);
+  color:var(--text);
+}
+
+.toast-wrap {
+  position:fixed; bottom:20px; right:20px; z-index:200;
+  display:flex; flex-direction:column; gap:8px;
+}
+
+.toast {
+  background:var(--surface3); border:1px solid rgba(34,211,238,0.35);
+  color:var(--teal); padding:12px 16px;
+  border-radius:var(--radius-sm); font-size:0.85rem; font-weight:700;
+  animation:slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { transform:translateX(400px); opacity:0; }
+  to { transform:translateX(0); opacity:1; }
+}
+
+.welcome-screen {
+  display:flex; align-items:center; justify-content:center;
+  padding:40px; text-align:center;
+  flex:1; flex-direction:column;
+}
+
+.welcome-icon { font-size:4rem; margin-bottom:20px; opacity:0.3; }
+.welcome-text { color:var(--text2); margin-bottom:20px; font-size:0.95rem; line-height:1.6; }
+
+.error-message {
+  background:var(--red-light); border:1px solid var(--red);
+  color:var(--red); padding:12px 16px;
+  border-radius:var(--radius-sm); margin-bottom:16px;
+  font-size:0.9rem;
+}
+
+.success-message {
+  background:var(--green-light); border:1px solid var(--green);
+  color:var(--green); padding:12px 16px;
+  border-radius:var(--radius-sm); margin-bottom:16px;
+  font-size:0.9rem;
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="topbar">
+    <div class="logo">📊 Digital CRM</div>
+    <div style="flex:1"></div>
+    <div id="sync-status" style="font-size:0.8rem; color:var(--text3);">⚡ מחובר</div>
+  </div>
+
+  <div class="workspace">
+    <!-- SIDEBAR - CLIENTS -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">לקוחות</div>
+        <div class="sidebar-search">
+          <span style="font-size:0.9rem;">🔍</span>
+          <input type="text" id="client-search" placeholder="חפש לקוח...">
+        </div>
+      </div>
+      <div class="clients-list" id="clients-list"></div>
+      <button class="sidebar-add-btn" onclick="openAddClientModal()">+ לקוח חדש</button>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="content-area">
+      <div class="welcome-screen" id="welcome-screen">
+        <div class="welcome-icon">👋</div>
+        <div class="welcome-text">בחר לקוח מהרשימה<br>כדי להתחיל</div>
+      </div>
+
+      <div id="client-detail" style="display:none; flex:1; overflow:hidden; display:flex; flex-direction:column;">
+        <div class="content-tabs" id="content-tabs"></div>
+        <div style="flex:1; overflow:hidden;">
+          <div id="posts-tab" class="tab-content active">
+            <div class="content-header">
+              <h3>פוסטים</h3>
+              <button class="btn-add-content" onclick="openAddContentModal('post')">+ פוסט חדש</button>
+            </div>
+            <div class="content-grid" id="posts-grid"></div>
+          </div>
+
+          <div id="carousel-tab" class="tab-content">
+            <div class="content-header">
+              <h3>קרוסלות</h3>
+              <button class="btn-add-content" onclick="openAddContentModal('carousel')">+ קרוסלה חדשה</button>
+            </div>
+            <div class="content-grid" id="carousel-grid"></div>
+          </div>
+
+          <div id="campaigns-tab" class="tab-content">
+            <div class="content-header">
+              <h3>קמפיינים</h3>
+              <button class="btn-add-content" onclick="openAddContentModal('campaign')">+ קמפיין חדש</button>
+            </div>
+            <div class="content-grid" id="campaigns-grid"></div>
+          </div>
+
+          <div id="documents-tab" class="tab-content">
+            <div class="content-header">
+              <h3>מסמכים חשובים</h3>
+              <button class="btn-add-content" onclick="openAddContentModal('document')">+ מסמך חדש</button>
+            </div>
+            <div class="content-grid" id="documents-grid"></div>
+          </div>
+
+          <div id="prompts-tab" class="tab-content">
+            <div class="content-header">
+              <h3>פרומפטים לסוכני AI</h3>
+              <button class="btn-add-content" onclick="openAddContentModal('prompt')">+ פרומפט חדש</button>
+            </div>
+            <div class="content-grid" id="prompts-grid"></div>
+          </div>
+
+          <div id="ideas-tab" class="tab-content">
+            <div class="content-header">
+              <h3>רעיונות לתוכן</h3>
+              <button class="btn-add-content" onclick="openAddContentModal('idea')">+ רעיון חדש</button>
+            </div>
+            <div class="content-grid" id="ideas-grid"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<!-- Add Client Modal -->
+<div class="modal-overlay" id="modal-add-client">
+  <div class="modal">
+    <h2>לקוח חדש</h2>
+    <div class="form-group">
+      <label>שם הלקוח</label>
+      <input type="text" id="input-client-name" placeholder="הזן שם לקוח">
+    </div>
+    <div class="form-group">
+      <label>אימייל</label>
+      <input type="email" id="input-client-email" placeholder="לקוח@example.com">
+    </div>
+    <div class="form-group">
+      <label>טלפון</label>
+      <input type="tel" id="input-client-phone" placeholder="052-1234567">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="saveNewClient()">שמור</button>
+      <button class="btn-secondary" onclick="closeModal('modal-add-client')">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Content Modal -->
+<div class="modal-overlay" id="modal-add-content">
+  <div class="modal">
+    <h2 id="modal-content-title">תוכן חדש</h2>
+    <div class="form-group">
+      <label>כותרת</label>
+      <input type="text" id="input-content-title" placeholder="הזן כותרת">
+    </div>
+    <div class="form-group">
+      <label>תוכן</label>
+      <textarea id="input-content-text" placeholder="כתוב את התוכן כאן..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>פלטפורמה</label>
+      <select id="input-content-platform">
+        <option value="instagram">Instagram</option>
+        <option value="facebook">Facebook</option>
+        <option value="tiktok">TikTok</option>
+        <option value="youtube">YouTube</option>
+        <option value="all">כל הפלטפורמות</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>סטטוס</label>
+      <select id="input-content-status">
+        <option value="idea">רעיון</option>
+        <option value="draft">טיוטה</option>
+        <option value="ready">מוכן</option>
+        <option value="published">פורסם</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="saveNewContent()">שמור</button>
+      <button class="btn-secondary" onclick="closeModal('modal-add-content')">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ===== SUPABASE SETUP =====
+const SUPABASE_URL = 'https://peuuexlxauxnmlhswphz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_R7Y2W2a-MAzrKXQJaTKPzQ_027l';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ===== STATE =====
+let activeClientId = null;
+let currentContentType = null;
+const TAB_TYPES = ['post', 'carousel', 'campaign', 'document', 'prompt', 'idea'];
+const TAB_LABELS = ['פוסטים', 'קרוסלות', 'קמפיינים', 'מסמכים חשובים', 'פרומפטים', 'רעיונות'];
+
+// ===== INIT =====
+async function init() {
+  console.log('🚀 מאתחל...');
+  await loadClients();
+  setupEventListeners();
+  console.log('✅ מוכן');
+}
+
+// ===== CLIENTS =====
+async function loadClients() {
+  try {
+    const { data, error } = await supabase
+      .from('clients')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    
+    renderClients(data || []);
+  } catch (err) {
+    console.error('Error loading clients:', err);
+    toast('שגיאה בטעינת לקוחות');
+  }
+}
+
+function renderClients(clients) {
+  const list = document.getElementById('clients-list');
+  if (clients.length === 0) {
+    list.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text3); font-size:0.85rem;">אין לקוחות עדיין</div>';
+    return;
+  }
+
+  list.innerHTML = clients.map(c => `
+    <div class="client-item ${c.id === activeClientId ? 'active' : ''}" onclick="selectClient('${c.id}', '${c.name}')">
+      <div class="client-avatar" style="background:linear-gradient(135deg, ${getColorForName(c.name)})">
+        ${c.name.charAt(0)}
+      </div>
+      <div class="client-item-info">
+        <div class="client-item-name">${c.name}</div>
+        <div class="client-item-sub">${c.email || 'בלי אימייל'}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function getColorForName(name) {
+  const colors = [
+    '#6c63ff, #22d3ee',
+    '#f87171, #fb923c',
+    '#34d399, #22d3ee',
+    '#a78bfa, #6c63ff',
+    '#fbbf24, #f59e0b'
+  ];
+  const hash = name.charCodeAt(0) + name.charCodeAt(name.length - 1);
+  return colors[hash % colors.length];
+}
+
+async function selectClient(clientId, clientName) {
+  activeClientId = clientId;
+  document.getElementById('welcome-screen').style.display = 'none';
+  document.getElementById('client-detail').style.display = 'flex';
+  
+  renderContentTabs();
+  await loadAllContent();
+  renderClients(await getClientsFromSupabase());
+}
+
+async function getClientsFromSupabase() {
+  const { data } = await supabase.from('clients').select('*');
+  return data || [];
+}
+
+async function saveNewClient() {
+  const name = document.getElementById('input-client-name').value.trim();
+  const email = document.getElementById('input-client-email').value.trim();
+  const phone = document.getElementById('input-client-phone').value.trim();
+
+  if (!name) {
+    toast('חסר שם לקוח');
+    return;
+  }
+
+  try {
+    const { error } = await supabase
+      .from('clients')
+      .insert([{ name, email, phone, status: 'active' }]);
+    
+    if (error) throw error;
+    
+    toast('✓ לקוח נוסף בהצלחה');
+    closeModal('modal-add-client');
+    document.getElementById('input-client-name').value = '';
+    document.getElementById('input-client-email').value = '';
+    document.getElementById('input-client-phone').value = '';
+    await loadClients();
+  } catch (err) {
+    console.error('Error saving client:', err);
+    toast('שגיאה בשמירת לקוח');
+  }
+}
+
+// ===== CONTENT TABS =====
+function renderContentTabs() {
+  const tabsContainer = document.getElementById('content-tabs');
+  tabsContainer.innerHTML = TAB_TYPES.map((type, idx) => `
+    <button class="content-tab ${idx === 0 ? 'active' : ''}" onclick="switchTab('${type}')">
+      ${TAB_LABELS[idx]}
+    </button>
+  `).join('');
+}
+
+function switchTab(type) {
+  document.querySelectorAll('.content-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  
+  event.target.classList.add('active');
+  const tabId = type === 'carousel' ? 'carousel-tab' :
+                type === 'campaign' ? 'campaigns-tab' :
+                type === 'document' ? 'documents-tab' :
+                type === 'prompt' ? 'prompts-tab' :
+                type === 'idea' ? 'ideas-tab' : 'posts-tab';
+  
+  document.getElementById(tabId).classList.add('active');
+  currentContentType = type;
+}
+
+// ===== CONTENT =====
+async function loadAllContent() {
+  if (!activeClientId) return;
+
+  try {
+    const { data, error } = await supabase
+      .from('content_items')
+      .select('*')
+      .eq('client_id', activeClientId)
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    
+    renderContentByType(data || []);
+  } catch (err) {
+    console.error('Error loading content:', err);
+    toast('שגיאה בטעינת תוכן');
+  }
+}
+
+function renderContentByType(items) {
+  TAB_TYPES.forEach(type => {
+    const filtered = items.filter(i => i.type === type);
+    const gridId = type === 'carousel' ? 'carousel-grid' :
+                   type === 'campaign' ? 'campaigns-grid' :
+                   type === 'document' ? 'documents-grid' :
+                   type === 'prompt' ? 'prompts-grid' :
+                   type === 'idea' ? 'ideas-grid' : 'posts-grid';
+    
+    const grid = document.getElementById(gridId);
+    
+    if (filtered.length === 0) {
+      grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">אין תוכן עדיין</div></div>';
+      return;
+    }
+    
+    grid.innerHTML = filtered.map(item => renderContentCard(item)).join('');
+  });
+}
+
+function renderContentCard(item) {
+  const platformLabels = {
+    instagram: 'Instagram',
+    facebook: 'Facebook',
+    tiktok: 'TikTok',
+    youtube: 'YouTube',
+    all: 'כל הפלטפורמות'
+  };
+
+  const statusLabels = {
+    idea: 'רעיון',
+    draft: 'טיוטה',
+    ready: 'מוכן',
+    published: 'פורסם'
+  };
+
+  const statusClass = item.status || 'idea';
+
+  return `
+    <div class="content-card">
+      <div class="content-card-header">
+        <div class="content-card-title">${item.title}</div>
+        <div class="content-card-type">${item.type.toUpperCase()}</div>
+      </div>
+      <div class="content-card-meta">
+        ${item.platform ? `<div class="badge badge-platform">${platformLabels[item.platform] || item.platform}</div>` : ''}
+        <div class="badge badge-status ${statusClass}">${statusLabels[statusClass] || statusClass}</div>
+      </div>
+      <div class="content-card-text">${item.content || ''}</div>
+      <div class="content-card-actions">
+        ${item.type === 'prompt' ? `
+          <button class="btn-card copy" onclick="copyToClipboard('${item.id}')">📋 העתק</button>
+        ` : `
+          <button class="btn-card" onclick="editContent('${item.id}')">✏️ עריכה</button>
+          <button class="btn-card copy" onclick="copyToClipboard('${item.id}')">📋 העתק</button>
+        `}
+        <button class="btn-card delete" onclick="deleteContent('${item.id}')">🗑️ מחק</button>
+      </div>
+    </div>
+  `;
+}
+
+async function openAddContentModal(type) {
+  currentContentType = type;
+  const titles = {
+    post: 'פוסט חדש',
+    carousel: 'קרוסלה חדשה',
+    campaign: 'קמפיין חדש',
+    document: 'מסמך חדש',
+    prompt: 'פרומפט חדש',
+    idea: 'רעיון חדש'
+  };
+  
+  document.getElementById('modal-content-title').textContent = titles[type];
+  document.getElementById('input-content-title').value = '';
+  document.getElementById('input-content-text').value = '';
+  document.getElementById('input-content-platform').value = 'instagram';
+  document.getElementById('input-content-status').value = 'idea';
+  
+  openModal('modal-add-content');
+}
+
+async function saveNewContent() {
+  const title = document.getElementById('input-content-title').value.trim();
+  const content = document.getElementById('input-content-text').value.trim();
+  const platform = document.getElementById('input-content-platform').value;
+  const status = document.getElementById('input-content-status').value;
+
+  if (!title) {
+    toast('חסרה כותרת');
+    return;
+  }
+
+  if (!activeClientId) {
+    toast('בחר לקוח ראשית');
+    return;
+  }
+
+  try {
+    const { error } = await supabase
+      .from('content_items')
+      .insert([{
+        client_id: activeClientId,
+        type: currentContentType,
+        title,
+        content,
+        platform: currentContentType === 'prompt' ? null : platform,
+        status
+      }]);
+    
+    if (error) throw error;
+    
+    toast('✓ תוכן נוסף בהצלחה');
+    closeModal('modal-add-content');
+    await loadAllContent();
+  } catch (err) {
+    console.error('Error saving content:', err);
+    toast('שגיאה בשמירת תוכן');
+  }
+}
+
+async function copyToClipboard(itemId) {
+  try {
+    const { data, error } = await supabase
+      .from('content_items')
+      .select('content, title')
+      .eq('id', itemId)
+      .single();
+    
+    if (error) throw error;
+    
+    const text = data.content || data.title || '';
+    await navigator.clipboard.writeText(text);
+    toast('✓ הועתק ללוח');
+  } catch (err) {
+    console.error('Error copying:', err);
+    toast('שגיאה בהעתקה');
+  }
+}
+
+async function deleteContent(itemId) {
+  if (!confirm('בטוח שברצונך למחוק?')) return;
+
+  try {
+    const { error } = await supabase
+      .from('content_items')
+      .delete()
+      .eq('id', itemId);
+    
+    if (error) throw error;
+    
+    toast('✓ נמחק בהצלחה');
+    await loadAllContent();
+  } catch (err) {
+    console.error('Error deleting:', err);
+    toast('שגיאה במחיקה');
+  }
+}
+
+async function editContent(itemId) {
+  toast('עריכה קרובה 🔜');
+}
+
+// ===== MODALS & UI =====
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function openAddClientModal() {
+  document.getElementById('input-client-name').value = '';
+  document.getElementById('input-client-email').value = '';
+  document.getElementById('input-client-phone').value = '';
+  openModal('modal-add-client');
+}
+
+function toast(msg) {
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  document.getElementById('toast-wrap').appendChild(el);
+  setTimeout(() => el.remove(), 2200);
+}
+
+function setupEventListeners() {
+  document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', e => {
+      if (e.target === m) m.classList.remove('open');
+    });
+  });
+}
+
+// ===== INIT =====
+window.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
