@@ -80,7 +80,9 @@ async function processOne(db: DB, extractor: NeedExtractor, raw: RawSignal & { i
     const locOk = !o.location || !ex.location || o.location === ex.location;
     const near = !o.published_at || !raw.published_at || Math.abs(+new Date(o.published_at) - +new Date(raw.published_at)) < 21 * 864e5;
     const titleSim = jaccard(tokens(o.what_happened), rawTok) >= 0.6 && locOk;
-    return near && ((sameE && locOk) || titleSim);
+    // Two tenders/requests from the same buyer are different needs: they must also match on title
+    const explicitKind = ex.event_type === 'TENDER_PUBLISHED' || ex.event_type === 'EXPLICIT_REQUEST';
+    return near && (explicitKind ? titleSim : (sameE && locOk) || titleSim);
   });
   if (hit) {
     const o = JSON.parse((cands.find((c) => c.id === hit.id)!).data) as Opportunity;

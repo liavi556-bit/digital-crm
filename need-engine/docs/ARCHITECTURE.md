@@ -39,7 +39,7 @@ They were hand-set by the developer, not calibrated on data; calibration is a ne
 
 ## Dedupe / entity resolution (`engine/dedupe.ts`)
 Same `event_type` AND (entity equal after normalisation / containment / token-Jaccard ≥ 0.6, with compatible location,
-within 21 days) OR title Jaccard ≥ 0.6. Merge adds an evidence row, unions predicted needs, bumps confidence +4 for
+within 21 days) OR title Jaccard ≥ 0.6. For TENDER_PUBLISHED/EXPLICIT_REQUEST only the title rule applies (one buyer publishes many different tenders). Merge adds an evidence row, unions predicted needs, bumps confidence +4 for
 corroboration. Known weakness: no alias table / no company-registry IDs yet.
 
 ## Matching
