@@ -40,7 +40,8 @@ export interface Playbook {
 }
 export const PLAYBOOKS: Playbook[] = [
   { type: 'TENDER_PUBLISHED', base_confidence: 0.8, intent: 90, horizon_days: 30,
-    patterns: [/מכרז/, /קול קורא/, /בקשה להצעות/, /הזמנה להציע הצעות/, /הליך תחרותי/, /\brfp\b/i, /\brfi\b/i],
+    // whole-word, optional ו/ה/ב/ל/מ/ש/כ prefix: "המכרזנית" (auctioneer) is not "מכרז"
+    patterns: [/(?<![א-ת])[והבלמשכ]{0,2}מכרז(?:ים|י|ה|ו)?(?![א-ת])/, /קול קורא/, /בקשה להצעות/, /הזמנה להציע הצעות/, /הליך תחרותי/, /\brfp\b/i, /\brfi\b/i],
     needs: [] },
   { type: 'NEW_LOCATION', base_confidence: 0.7, intent: 70, horizon_days: 60,
     patterns: [/(פותח|פותחת|תפתח|יפתח|נפתח|נפתחה|פתיחת|פתחה|פתחו|עוברת|עבר|מעבירה|מעביר).{0,25}(סניף|חנות|מרכז|משרד|קליניקה|מסעדה|מפעל|אולם|בית ?קפה|מחסן|מרכז לוגיסטי|אתר)/, /(סניף|חנות|משרדים|מפעל|מרכז לוגיסטי) חדש/],

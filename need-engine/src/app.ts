@@ -2,7 +2,8 @@ import { openDb } from './db.js';
 import { logger } from './logger.js';
 import { createHttp } from './http.js';
 import { createLLM } from './providers/llm.js';
-import { LLMExtractor, RuleBasedExtractor } from './engine/extract.js';
+import { RuleBasedExtractor } from './engine/extract.js';
+import { LLMNeedExtractorV2 } from './engine/llm-extract.js';
 import { buildConnectors } from './connectors/registry.js';
 import { ingest, processNew } from './engine/pipeline.js';
 import { DraftActionProvider } from './actions/provider.js';
@@ -12,7 +13,7 @@ export function createApp(dbPath?: string) {
   const db = openDb(dbPath);
   const http = createHttp(db, logger);
   const llm = createLLM();
-  const extractor = llm ? new LLMExtractor(llm) : new RuleBasedExtractor();
+  const extractor = llm ? new LLMNeedExtractorV2(llm) : new RuleBasedExtractor();
   const actions = new DraftActionProvider(llm);
   const scorer = new WeightedMatchScorer();
   const ctx = { http, log: logger };

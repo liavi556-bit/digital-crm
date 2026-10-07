@@ -9,7 +9,9 @@ import { CkanConnector, parseIlDate } from './connectors/ckan.js';
 import { buildProfile } from './engine/profile.js';
 import { WeightedMatchScorer } from './engine/match.js';
 import { sameEntity } from './engine/dedupe.js';
-import type { NeedExtractor, HttpClient } from './types.js';
+import type { NeedExtractor, HttpClient, LLMProvider } from './types.js';
+import { candidateHit } from './engine/candidate.js';
+import { LLMNeedExtractorV2 } from './engine/llm-extract.js';
 
 const quiet = { info() {}, warn() {}, error() {} };
 const tests: [string, () => Promise<void>][] = [];
@@ -95,6 +97,50 @@ t('dedupe: two different tenders from the same buyer stay separate', async () =>
   await processNew(db, new RuleBasedExtractor(), quiet, 1);
   const opps = loadOpportunities(db);
   assert.equal(opps.length, 2, 'cleaning tender + elevator tender; the clarification merges into the cleaning one');
+});
+
+const rawOf = (title: string, text: string, ago = 2, extra: Record<string, unknown> = {}) => ({ source: 's', source_type: 'html', source_url: `https://x.test/${encodeURIComponent(title).slice(0, 20)}`, title, text,
+  published_at: new Date(Date.now() - ago * 864e5).toISOString(), fetched_at: new Date().toISOString(), entity_hint: null, location_hint: null, raw_metadata: {}, ...extra });
+
+t('"המכרזנית" is not "מכרז"; attachment "לפרסום" does not make a tender an advertising one', async () => {
+  assert.equal(candidateHit('המכרזנית ישבה על כיסא מתקפל ליד מזרקה'), null);
+  assert.ok(candidateHit('העירייה פרסמה מכרז לניקיון'));
+  const auction = await new RuleBasedExtractor().extract(rawOf('אחוזה נמכרה', 'המכרזנית ישבה על כיסא מתקפל, והקונה שילם בהמחאות'));
+  assert.notEqual(auction.event_type, 'TENDER_PUBLISHED');
+  const t1 = await new RuleBasedExtractor().extract(rawOf('הפעלת מרכזי יום טיפוליים לאנשים עם מוגבלויות', 'שם מכרז: הפעלת מרכזי יום טיפוליים. קבצים: מכרז 23-2026 - נוסח לפרסום.', 2, { entity_hint: 'עיריית דמו' }));
+  assert.equal(t1.event_type, 'TENDER_PUBLISHED');
+  assert.notEqual(t1.explicit_need?.category, 'local_advertising');
+});
+
+t('freshness: an open stated deadline overrides publication age; past deadline stays stale', async () => {
+  const db = openDb(':memory:');
+  const conn = { id: 'c', sourceType: 'html', fetch: async () => [
+    rawOf('מכרז לתחזוקת מעליות במוסדות חינוך', 'עיריית דמו מפרסמת מכרז לתחזוקת מעליות. מועד אחרון להגשה: 20/12/2099', 90, { entity_hint: 'עיריית דמו' }),
+    rawOf('מכרז לגינון ציבורי', 'עיריית דמו מפרסמת מכרז לגינון. מועד אחרון להגשה: 01/01/2020', 90, { entity_hint: 'עיריית דמו' })] };
+  await ingest(db, [conn], { http: null as any, log: quiet });
+  await processNew(db, new RuleBasedExtractor(), quiet, 1);
+  const reasons = db.prepare("SELECT reason FROM decisions WHERE stage='prefilter' ORDER BY raw_id").all().map((r: any) => r.reason);
+  assert.deepEqual(reasons, ['open_deadline_overrides_age', 'stale']);
+  assert.equal(loadOpportunities(db).length, 1);
+});
+
+t('LLM v2: non-verbatim quotes, invented entity and invented deadline are rejected', async () => {
+  const src = rawOf('עיריית דמו מפרסמת מכרז לשירותי ניקיון', 'עיריית דמו מבקשת הצעות לשירותי ניקיון מוסדות חינוך. מועד אחרון: 20/12/2099.');
+  const fake = (o: unknown): LLMProvider => ({ id: 'fake', complete: async () => JSON.stringify(o) });
+  const good = { is_business_event: true, event_type: 'TENDER_PUBLISHED', entity: 'עיריית דמו', event_summary: 'מכרז ניקיון',
+    explicit_needs: [{ need: 'ניקיון', category: 'cleaning', quote: 'עיריית דמו מבקשת הצעות לשירותי ניקיון מוסדות חינוך' }],
+    predicted_needs: [{ need: 'שילוט', category: 'signage', reason: 'x', confidence: 0.9, quote: 'משפט שלא קיים במקור' }],
+    commercial_actions: ['להגיש הצעה'], evidence_quotes: ['מבקשת הצעות לשירותי ניקיון'], deadline: '2099-12-20', confidence: 0.9, reject_reason: null };
+  const ok = await new LLMNeedExtractorV2(fake(good)).extract(src);
+  assert.ok(ok.is_opportunity); assert.equal(ok.explicit_need?.category, 'cleaning');
+  assert.equal(ok.predicted_needs?.length, 0, 'hallucinated predicted quote dropped');
+  assert.equal(ok.deadline_at?.slice(0, 10), '2099-12-20');
+  const badDeadline = await new LLMNeedExtractorV2(fake({ ...good, deadline: '2099-11-05' })).extract(src);
+  assert.equal(badDeadline.deadline_at, null, 'deadline not in source is dropped');
+  const badEntity = await new LLMNeedExtractorV2(fake({ ...good, entity: 'משרד הביטחון' })).extract(src);
+  assert.ok(!badEntity.is_opportunity);
+  const badQuote = await new LLMNeedExtractorV2(fake({ ...good, explicit_needs: [{ ...good.explicit_needs[0], quote: 'העירייה רוצה לקנות מחשבים חדשים' }], predicted_needs: [] })).extract(src);
+  assert.ok(!badQuote.is_opportunity);
 });
 
 t('connector failure is graceful', async () => {

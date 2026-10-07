@@ -29,7 +29,7 @@ function statedValue(text: string): { amount_ils: number; basis: 'stated' } | nu
   if (/דולר|\$/.test(m[0])) n *= 3.7; // coarse FX; marker 'stated' means amount was in the source
   return { amount_ils: Math.round(n), basis: 'stated' };
 }
-function deadline(text: string): string | null {
+export function findDeadline(text: string): string | null {
   const m = text.match(/(?:עד|מועד אחרון[^\d]{0,25}|הגשה[^\d]{0,25})\s*(?:ה-?)?(\d{1,2})[./](\d{1,2})[./](\d{2,4})/);
   if (!m) return null;
   const y = Number(m[3]) < 100 ? 2000 + Number(m[3]) : Number(m[3]);
@@ -60,7 +60,10 @@ export class RuleBasedExtractor implements NeedExtractor {
     if (!full.includes(quote) || quote.length < 15) return { is_opportunity: false, reject_reason: 'evidence_too_short' };
 
     const location = raw.location_hint || detectLocation(full);
-    const cats = detectCategories(full);
+    // For tenders/requests the subject is the tender NAME; attachment file names ("נוסח לפרסום") must not set the category
+    const explicitKind = type === 'TENDER_PUBLISHED' || type === 'EXPLICIT_REQUEST';
+    const titleCats = explicitKind ? detectCategories(raw.title) : [];
+    const cats = titleCats.length ? titleCats : detectCategories(explicitKind ? raw.title : full);
     let explicit: Extraction['explicit_need'] = null;
     let predicted: PredictedNeed[] = [];
     if (type === 'TENDER_PUBLISHED' || type === 'EXPLICIT_REQUEST') {
@@ -73,7 +76,7 @@ export class RuleBasedExtractor implements NeedExtractor {
     }
     const official = ['ckan', 'gov'].includes(raw.source_type);
     const conf = clamp(((pb?.base_confidence ?? 0.7) + (entity ? 0.08 : 0) + (location ? 0.04 : 0) + (official ? 0.08 : 0) + (best && best.hits > 1 ? 0.04 : 0)) * 100, 20, 95);
-    const dl = deadline(full);
+    const dl = findDeadline(full);
     const expires = dl ?? addDays(raw.published_at, pb?.horizon_days ?? 30);
     const daysToExpiry = (+new Date(expires) - Date.now()) / 864e5;
     return {

@@ -5,6 +5,7 @@ import { SearchDiscoveryConnector, DISCOVERY_QUERIES } from './search.js';
 import { FixtureConnector } from './fixture.js';
 import { GoogleNewsRssSearch } from '../providers/search.js';
 import { config } from '../config.js';
+import { logger } from '../logger.js';
 
 /** Verified 2026-10-07 from an open network (see docs/SOURCES.md for status, robots and ToS notes). */
 export const FEEDS: FeedDef[] = [
@@ -23,9 +24,11 @@ export function createSearchProvider(): SearchProvider | null {
 export function buildConnectors(enabled = config.connectors): SourceConnector[] {
   const out: SourceConnector[] = [];
   if (enabled.includes('rss')) out.push(...FEEDS.map((f) => new RssConnector(f)));
-  const sp = createSearchProvider();
-  if (enabled.includes('search') && sp) out.push(...DISCOVERY_QUERIES.map((q) => new SearchDiscoveryConnector(sp, q)));
-  if (enabled.includes('ckan')) out.push(...CKAN_QUERIES.map((q) => new CkanConnector(q)));
+  // DISABLED by owner decision 2026-10-07 (code kept for reference, see docs/SOURCES.md):
+  //  - search: Google News RSS is "personal, non-commercial use" -> not a product source
+  //  - ckan:   data.gov.il robots.txt has `Disallow: /api/` and no allowed bulk-download path was found
+  for (const off of ['search', 'ckan']) if (enabled.includes(off)) logger.warn(`connector family "${off}" is disabled (see docs/SOURCES.md) - ignored`);
+  void createSearchProvider; void DISCOVERY_QUERIES; void SearchDiscoveryConnector; void CkanConnector; void CKAN_QUERIES;
   if (enabled.includes('fixture')) out.push(new FixtureConnector());
   return out;
 }

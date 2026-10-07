@@ -35,7 +35,8 @@ export interface Logger {
 // ---- SIGNAL / NEED layer ----
 export type EventType =
   | 'NEW_LOCATION' | 'FUNDING_ROUND' | 'TENDER_PUBLISHED' | 'HIRING_SURGE' | 'NEW_COMPANY'
-  | 'PRODUCT_LAUNCH' | 'EXPANSION' | 'MERGER_ACQUISITION' | 'CONSTRUCTION_PROJECT' | 'REBRAND' | 'EXPLICIT_REQUEST';
+  | 'PRODUCT_LAUNCH' | 'EXPANSION' | 'MERGER_ACQUISITION' | 'CONSTRUCTION_PROJECT' | 'REBRAND' | 'EXPLICIT_REQUEST'
+  | 'PERMIT_OR_OCCUPANCY' | 'CONTRACT_WIN' | 'EVENT_CONFERENCE' | 'OTHER_EVENT';
 
 export interface PredictedNeed {
   need: string;          // Hebrew label
@@ -60,6 +61,12 @@ export interface Extraction {
   urgency?: 'low' | 'medium' | 'high';
   evidence_quote?: string;
   expires_at?: string | null;
+  // LLM v2 extras (optional; rules extractor leaves them empty)
+  explicit_needs?: { need: string; category: string; quote: string }[];
+  evidence_quotes?: string[];
+  commercial_actions?: string[];
+  deadline_at?: string | null; // only a deadline stated in the source (verified)
+  llm_dropped?: string[];      // claims the validator removed (non-verbatim quotes, low confidence)
 }
 
 export interface NeedExtractor {
@@ -98,6 +105,9 @@ export interface Opportunity {
   synthetic: boolean;
   extractor: string;
   high_quality: boolean;
+  explicit_needs?: { need: string; category: string; quote: string }[];
+  commercial_actions?: string[];
+  deadline_at?: string | null;
 }
 
 // ---- Matching ----

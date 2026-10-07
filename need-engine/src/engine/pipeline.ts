@@ -4,6 +4,9 @@ import { createHash } from 'node:crypto';
 import type { SourceConnector, ConnectorContext, NeedExtractor, Extraction, Opportunity, RawSignal, Evidence } from '../types.js';
 import { config } from '../config.js';
 import { CAT } from './taxonomy.js';
+import { candidateHit } from './candidate.js';
+import { decode, flatForMatch, isVerbatim } from './llm-extract.js';
+import { findDeadline } from './extract.js';
 import { sameEntity, jaccard, tokens, dedupeKey, normEntity } from './dedupe.js';
 
 const hash = (s: string) => createHash('sha256').update(s).digest('hex').slice(0, 32);
@@ -51,21 +54,28 @@ export async function processNew(db: DB, extractor: NeedExtractor, log: Connecto
 
 async function processOne(db: DB, extractor: NeedExtractor, raw: RawSignal & { id: number; synthetic: number }) {
   const setStatus = (s: string) => db.prepare('UPDATE raw_items SET status=? WHERE id=?').run(s, raw.id);
-  // prefilter
+  const full = decode(`${raw.title}. ${raw.text}`).replace(/\s+/g, ' ');
+  // 1. prefilter: length + freshness. An open, stated deadline overrides publication age (a live tender is not stale).
   if ((raw.title + raw.text).length < 25) { decide(db, raw.id, 'prefilter', 'rejected', 'too_short'); return setStatus('rejected'); }
-  if (raw.published_at && Date.now() - +new Date(raw.published_at) > config.maxAgeDays * 864e5) { decide(db, raw.id, 'prefilter', 'rejected', 'stale', { published_at: raw.published_at }); return setStatus('rejected'); }
-  decide(db, raw.id, 'prefilter', 'passed', 'ok');
+  if (raw.published_at && Date.now() - +new Date(raw.published_at) > config.maxAgeDays * 864e5) {
+    const dl = findDeadline(full);
+    if (!dl || +new Date(dl) < Date.now()) { decide(db, raw.id, 'prefilter', 'rejected', 'stale', { published_at: raw.published_at, deadline: dl }); return setStatus('rejected'); }
+    decide(db, raw.id, 'prefilter', 'passed', 'open_deadline_overrides_age', { published_at: raw.published_at, deadline: dl });
+  } else decide(db, raw.id, 'prefilter', 'passed', 'ok');
 
-  // extract (LLM or rules)
+  // 2. cheap candidate filter (keyword retrieval only) -> only candidates reach the extractor / LLM
+  const hitWord = raw.raw_metadata?.source_is_prefiltered ? 'source_is_prefiltered' : candidateHit(full);
+  if (!hitWord) { decide(db, raw.id, 'candidate', 'rejected', 'not_candidate'); return setStatus('rejected'); }
+  decide(db, raw.id, 'candidate', 'passed', hitWord);
+
+  // 3. extract (LLM or rules)
   const ex: Extraction = await extractor.extract(raw);
   if (!ex.is_opportunity) { decide(db, raw.id, 'extract', 'rejected', ex.reject_reason ?? 'not_an_opportunity'); return setStatus('rejected'); }
 
-  // anti-hallucination validation
-  const full = `${raw.title}. ${raw.text}`.replace(/\s+/g, ' ');
-  const flat = (s: string) => s.replace(/\s+/g, ' ').trim();
-  if (!ex.evidence_quote || !full.includes(flat(ex.evidence_quote))) { decide(db, raw.id, 'validate', 'rejected', 'evidence_not_verbatim_in_source', { quote: ex.evidence_quote }); return setStatus('rejected'); }
+  // 4. anti-hallucination validation (same normalisation as the extractor's checks)
+  if (!ex.evidence_quote || !isVerbatim(ex.evidence_quote, full)) { decide(db, raw.id, 'validate', 'rejected', 'evidence_not_verbatim_in_source', { quote: ex.evidence_quote }); return setStatus('rejected'); }
   if (!ex.entity || !ex.event_type || !raw.source_url) { decide(db, raw.id, 'validate', 'rejected', 'missing_entity_or_url'); return setStatus('rejected'); }
-  if (ex.entity.length > 3 && !full.includes(ex.entity) && !raw.entity_hint) { decide(db, raw.id, 'validate', 'rejected', 'entity_not_in_source', { entity: ex.entity }); return setStatus('rejected'); }
+  if (ex.entity.length > 3 && !flatForMatch(full).includes(flatForMatch(ex.entity)) && !raw.entity_hint) { decide(db, raw.id, 'validate', 'rejected', 'entity_not_in_source', { entity: ex.entity }); return setStatus('rejected'); }
   if (ex.estimated_value && !/\d/.test(full)) ex.estimated_value = null;
   if (ex.expires_at && +new Date(ex.expires_at) < Date.now()) { decide(db, raw.id, 'validate', 'rejected', 'already_expired', { expires_at: ex.expires_at }); return setStatus('rejected'); }
   db.prepare('INSERT OR REPLACE INTO signals(raw_id,extractor,extraction,created_at) VALUES(?,?,?,?)').run(raw.id, extractor.id, JSON.stringify(ex), nowIso());
@@ -105,6 +115,7 @@ async function processOne(db: DB, extractor: NeedExtractor, raw: RawSignal & { i
     source_url: raw.source_url, source_name: raw.source, published_at: raw.published_at, expires_at: ex.expires_at ?? null,
     possible_solutions: [], allowed_actions: ['open_source', 'investigate', 'prepare_outreach', 'prepare_action_plan'],
     synthetic: !!raw.synthetic, extractor: extractor.id,
+    explicit_needs: ex.explicit_needs ?? (ex.explicit_need ? [ex.explicit_need] : []), commercial_actions: ex.commercial_actions ?? [], deadline_at: ex.deadline_at ?? null,
   };
   const cats = new Set([base.category, ...base.predicted_needs.map((p) => p.category)]);
   base.possible_solutions = [...cats].flatMap((c) => CAT[c]?.solutions.slice(0, 1) ?? []);

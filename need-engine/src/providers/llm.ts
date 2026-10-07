@@ -1,3 +1,4 @@
+import { spawn } from 'node:child_process';
 import type { LLMProvider } from '../types.js';
 import { config } from '../config.js';
 
@@ -40,8 +41,39 @@ export class OpenAICompatProvider implements LLMProvider {
   }
 }
 
+
+/**
+ * Local Claude Code CLI in headless mode (`claude -p`), billed to the user's own Claude subscription.
+ * Lean call: custom system prompt, no tools, no MCP, no settings -> ~200 input tokens of overhead.
+ */
+export class ClaudeCliProvider implements LLMProvider {
+  get id() { return `claude-cli:${config.claudeCliModel}`; }
+  complete({ system, user }: Parameters<LLMProvider['complete']>[0]): Promise<string> {
+    const args = ['-p', '--model', config.claudeCliModel, '--output-format', 'json', '--system-prompt', system,
+      '--tools', '', '--strict-mcp-config', '--setting-sources', ''];
+    return new Promise((resolve, reject) => {
+      const p = spawn(config.claudeCliBin, args, { shell: false, windowsHide: true });
+      let out = '', err = '';
+      const timer = setTimeout(() => { p.kill(); reject(new Error('claude-cli timeout')); }, 120000);
+      p.stdout.on('data', (d) => (out += d));
+      p.stderr.on('data', (d) => (err += d));
+      p.on('error', (e) => { clearTimeout(timer); reject(e); });
+      p.on('close', (code) => {
+        clearTimeout(timer);
+        try {
+          const j = JSON.parse(out);
+          if (j.is_error) return reject(new Error(`claude-cli: ${String(j.result).slice(0, 200)}`));
+          resolve(String(j.result ?? ''));
+        } catch { reject(new Error(`claude-cli exit ${code}: ${(err || out).slice(0, 200)}`)); }
+      });
+      p.stdin.end(user);
+    });
+  }
+}
+
 /** Returns null when no LLM is configured -> engine falls back to rule-based extractors. */
 export function createLLM(): LLMProvider | null {
+  if (config.llmProvider === 'claude-cli') return new ClaudeCliProvider();
   if (config.llmProvider === 'anthropic' && config.anthropicKey) return new AnthropicProvider();
   if (config.llmProvider === 'openai' && (config.openaiKey || config.openaiBase.includes('localhost'))) return new OpenAICompatProvider();
   return null;
