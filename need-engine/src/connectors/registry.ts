@@ -3,6 +3,7 @@ import { RssConnector, type FeedDef } from './rss.js';
 import { CkanConnector } from './ckan.js';
 import { SearchDiscoveryConnector, DISCOVERY_QUERIES } from './search.js';
 import { FixtureConnector } from './fixture.js';
+import { DekelBidsConnector, HaifaTendersConnector, TlvConstructionSitesConnector } from './tenders-html.js';
 import { GoogleNewsRssSearch } from '../providers/search.js';
 import { config } from '../config.js';
 import { logger } from '../logger.js';
@@ -29,6 +30,10 @@ export function buildConnectors(enabled = config.connectors): SourceConnector[] 
   //  - ckan:   data.gov.il robots.txt has `Disallow: /api/` and no allowed bulk-download path was found
   for (const off of ['search', 'ckan']) if (enabled.includes(off)) logger.warn(`connector family "${off}" is disabled (see docs/SOURCES.md) - ignored`);
   void createSearchProvider; void DISCOVERY_QUERIES; void SearchDiscoveryConnector; void CkanConnector; void CKAN_QUERIES;
+  // Top-3 sources by measured Opportunity Density (docs/SOURCE-BENCHMARK.md)
+  if (enabled.includes('dekel')) out.push(new DekelBidsConnector());
+  if (enabled.includes('haifa')) out.push(new HaifaTendersConnector());
+  if (enabled.includes('tlv-sites')) out.push(new TlvConstructionSitesConnector());
   if (enabled.includes('fixture')) out.push(new FixtureConnector());
   return out;
 }

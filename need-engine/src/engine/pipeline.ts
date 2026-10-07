@@ -39,7 +39,7 @@ export async function ingest(db: DB, connectors: SourceConnector[], ctx: Connect
 // ---------- 2-4. PROCESS: prefilter -> extract -> validate -> dedupe ----------
 const rowToRaw = (r: any): RawSignal & { id: number; synthetic: number } => ({ ...r, raw_metadata: JSON.parse(r.raw_metadata ?? '{}') });
 
-export async function processNew(db: DB, extractor: NeedExtractor, log: ConnectorContext['log'], concurrency = 4) {
+export async function processNew(db: DB, extractor: NeedExtractor, log: ConnectorContext['log'], concurrency = Number(process.env.PROCESS_CONCURRENCY) || 4) {
   const rows = db.prepare("SELECT * FROM raw_items WHERE status='new' ORDER BY id").all().map(rowToRaw);
   let idx = 0;
   const worker = async () => {

@@ -48,13 +48,13 @@ export class OpenAICompatProvider implements LLMProvider {
  */
 export class ClaudeCliProvider implements LLMProvider {
   get id() { return `claude-cli:${config.claudeCliModel}`; }
-  complete({ system, user }: Parameters<LLMProvider['complete']>[0]): Promise<string> {
+  complete({ system, user, schema }: Parameters<LLMProvider['complete']>[0]): Promise<string> {
     const args = ['-p', '--model', config.claudeCliModel, '--output-format', 'json', '--system-prompt', system,
-      '--tools', '', '--strict-mcp-config', '--setting-sources', ''];
+      '--tools', '', '--strict-mcp-config', '--setting-sources', '', ...(schema ? ['--json-schema', JSON.stringify(schema)] : [])];
     return new Promise((resolve, reject) => {
       const p = spawn(config.claudeCliBin, args, { shell: false, windowsHide: true });
       let out = '', err = '';
-      const timer = setTimeout(() => { p.kill(); reject(new Error('claude-cli timeout')); }, 120000);
+      const timer = setTimeout(() => { p.kill(); reject(new Error('claude-cli timeout')); }, 240000);
       p.stdout.on('data', (d) => (out += d));
       p.stderr.on('data', (d) => (err += d));
       p.on('error', (e) => { clearTimeout(timer); reject(e); });
@@ -63,7 +63,8 @@ export class ClaudeCliProvider implements LLMProvider {
         try {
           const j = JSON.parse(out);
           if (j.is_error) return reject(new Error(`claude-cli: ${String(j.result).slice(0, 200)}`));
-          resolve(String(j.result ?? ''));
+          // structured output (when a schema was given) is valid, properly escaped JSON
+          resolve(j.structured_output ? JSON.stringify(j.structured_output) : String(j.result ?? ''));
         } catch { reject(new Error(`claude-cli exit ${code}: ${(err || out).slice(0, 200)}`)); }
       });
       p.stdin.end(user);
@@ -82,5 +83,10 @@ export function createLLM(): LLMProvider | null {
 export function parseJsonLoose<T>(s: string): T {
   const m = s.match(/\{[\s\S]*\}/);
   if (!m) throw new Error('no JSON in LLM output');
-  return JSON.parse(m[0]) as T;
+  try { return JSON.parse(m[0]) as T; }
+  catch {
+    // Hebrew abbreviations (בע"מ, ש"ח, תמ"א) often arrive with an unescaped " inside a JSON string.
+    // A " between two Hebrew letters is never a JSON delimiter -> turn it into gershayim (״). Verbatim checks normalise both.
+    return JSON.parse(m[0].replace(/(?<=[א-ת])"(?=[א-ת])/g, '״')) as T;
+  }
 }

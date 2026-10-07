@@ -12,6 +12,7 @@ import { sameEntity } from './engine/dedupe.js';
 import type { NeedExtractor, HttpClient, LLMProvider } from './types.js';
 import { candidateHit } from './engine/candidate.js';
 import { LLMNeedExtractorV2 } from './engine/llm-extract.js';
+import { parseJsonLoose } from './providers/llm.js';
 
 const quiet = { info() {}, warn() {}, error() {} };
 const tests: [string, () => Promise<void>][] = [];
@@ -141,6 +142,10 @@ t('LLM v2: non-verbatim quotes, invented entity and invented deadline are reject
   assert.ok(!badEntity.is_opportunity);
   const badQuote = await new LLMNeedExtractorV2(fake({ ...good, explicit_needs: [{ ...good.explicit_needs[0], quote: 'העירייה רוצה לקנות מחשבים חדשים' }], predicted_needs: [] })).extract(src);
   assert.ok(!badQuote.is_opportunity);
+});
+
+t('LLM JSON with unescaped Hebrew abbreviation quotes is repaired', async () => {
+  assert.deepEqual(parseJsonLoose<any>('```json\n{"entity":"מוריה חברה לפיתוח בע"מ","v":"ש"ח"}\n```'), { entity: 'מוריה חברה לפיתוח בע״מ', v: 'ש״ח' });
 });
 
 t('connector failure is graceful', async () => {

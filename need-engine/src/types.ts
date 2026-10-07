@@ -133,7 +133,7 @@ export interface Match {
 // ---- Provider abstractions ----
 export interface LLMProvider {
   readonly id: string;
-  complete(req: { system: string; user: string; json?: boolean; maxTokens?: number }): Promise<string>;
+  complete(req: { system: string; user: string; json?: boolean; maxTokens?: number; schema?: object }): Promise<string>;
 }
 export interface SearchHit { title: string; url: string; snippet: string; source: string | null; published_at: string | null }
 export interface SearchProvider {

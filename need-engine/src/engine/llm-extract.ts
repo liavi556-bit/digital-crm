@@ -9,12 +9,26 @@ export const isVerbatim = (quote: string | undefined | null, source: string) => 
 const EVENT_TYPES: EventType[] = ['TENDER_PUBLISHED', 'EXPLICIT_REQUEST', 'NEW_LOCATION', 'FUNDING_ROUND', 'HIRING_SURGE', 'NEW_COMPANY', 'PRODUCT_LAUNCH',
   'EXPANSION', 'MERGER_ACQUISITION', 'CONSTRUCTION_PROJECT', 'PERMIT_OR_OCCUPANCY', 'CONTRACT_WIN', 'EVENT_CONFERENCE', 'REBRAND', 'OTHER_EVENT'];
 
+
+const S = { type: 'string' }, N = { type: 'number' }, NS = { type: ['string', 'null'] };
+/** JSON Schema passed to the model as structured output (no hand-written JSON to break). */
+export const EXTRACTION_SCHEMA = {
+  type: 'object', additionalProperties: false,
+  required: ['is_business_event', 'event_type', 'entity', 'event_summary', 'explicit_needs', 'predicted_needs', 'commercial_actions', 'evidence_quotes', 'deadline', 'location', 'confidence', 'reject_reason'],
+  properties: {
+    is_business_event: { type: 'boolean' }, event_type: { type: 'string', enum: EVENT_TYPES }, entity: S, event_summary: S,
+    explicit_needs: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['need', 'category', 'quote'], properties: { need: S, category: { type: 'string', enum: CATEGORIES.map((c) => c.key) }, quote: S } } },
+    predicted_needs: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['need', 'category', 'reason', 'confidence', 'quote'], properties: { need: S, category: { type: 'string', enum: CATEGORIES.map((c) => c.key) }, reason: S, confidence: N, quote: S } } },
+    commercial_actions: { type: 'array', items: S }, evidence_quotes: { type: 'array', items: S }, deadline: NS, location: NS, confidence: N, reject_reason: NS,
+  },
+};
+
 const SYSTEM = `You are the validation + extraction step of "Need Engine". Input: ONE public item from an Israeli source (Hebrew or English).
 Decide whether it is a real BUSINESS EVENT and which commercial NEEDS follow from it. Output ONLY one JSON object, no prose:
 {"is_business_event":bool,"event_type":"<one of ${EVENT_TYPES.join('|')}>","entity":"<who; copied exactly as written in the item>","event_summary":"<one Hebrew sentence, facts from the item only>",
 "explicit_needs":[{"need":"<Hebrew>","category":"<key>","quote":"<verbatim>"}],
 "predicted_needs":[{"need":"<Hebrew>","category":"<key>","reason":"<how it follows from THIS event>","confidence":0.0,"quote":"<verbatim sentence describing the event>"}],
-"commercial_actions":["<concrete thing a vendor can do now>"],"evidence_quotes":["<verbatim>"],"deadline":"<YYYY-MM-DD or null>","location":"<city as written or null>","confidence":0.0,"reject_reason":null}
+"commercial_actions":["<Hebrew: concrete thing a vendor can do now>"],"evidence_quotes":["<verbatim>"],"deadline":"<YYYY-MM-DD or null>","location":"<city as written or null>","confidence":0.0,"reject_reason":null}
 
 DEFINITIONS
 - EXPLICIT need: the body itself says it is seeking / buying / ordering / inviting offers or proposals for something (tender, RFQ, RFP, call for proposals to suppliers, "מבקשת הצעות", "דרוש ספק").
@@ -60,8 +74,13 @@ export class LLMNeedExtractorV2 implements NeedExtractor {
     const source = `${title}. ${text}`;
     const user = `source: ${raw.source}\npublished_at: ${raw.published_at ?? 'unknown'}\nurl: ${raw.source_url}\n${raw.entity_hint ? `publisher/buyer (structured field): ${raw.entity_hint}\n` : ''}title: ${title}\ntext: ${text.slice(0, 3500)}`;
     let out: LlmOut;
-    try { out = parseJsonLoose<LlmOut>(await this.llm.complete({ system: SYSTEM, user, json: true })); }
-    catch (e) { return { is_opportunity: false, reject_reason: `llm_error:${(e as Error).message.slice(0, 80)}` }; }
+    try { out = parseJsonLoose<LlmOut>(await this.llm.complete({ system: SYSTEM, user, json: true, schema: EXTRACTION_SCHEMA })); }
+    catch {
+      try { out = parseJsonLoose<LlmOut>(await this.llm.complete({ system: SYSTEM, user: `${user}
+
+Return strictly valid JSON (escape every " inside strings as \\").`, json: true, schema: EXTRACTION_SCHEMA })); }
+      catch (e) { return { is_opportunity: false, reject_reason: `llm_error:${(e as Error).message.slice(0, 80)}` }; }
+    }
 
     const dropped: string[] = [];
     if (!out.is_business_event) return { is_opportunity: false, reject_reason: `llm:not_business_event:${out.reject_reason ?? ''}`.slice(0, 160) };
