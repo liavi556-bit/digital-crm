@@ -1,24 +1,53 @@
 # Sources
 
-**Verification status: NONE of these endpoints could be reached from the build environment** (egress policy returned
-HTTP 403 for every host, including WebFetch). URLs below come from memory or public listings found via search and are
-**unverified**. First real run will show which work (`/admin` → Connectors). Nothing here bypasses login/CAPTCHA/limits.
+**Verified 2026-10-07 from an open network** (Windows desktop, plain `curl`/`fetch`, UA `NeedEnginePOC/0.1`).
+Nothing here bypasses login, CAPTCHA, Cloudflare challenges or rate limits. One reasonable attempt per blocking source.
 
-| Source | Connector | Access | Status | Limits / terms to check |
-|---|---|---|---|---|
-| data.gov.il (CKAN) | `CkanConnector` — `package_search` then `datastore_search` on datastore-active resources; resource ids discovered, not hard-coded | Official open API, no key | Unverified. A web search suggested the companies-registrar data exists there; a search on tenders found **no** machine-readable Israeli procurement dataset (2015 OKI index said tender awards/exemptions aren't open data — may be outdated) | Dataset-specific licence (usually CC-BY/Israeli open licence); be polite on rate |
-| Globes RSS | `RssConnector` | Public RSS | `FeederKeyword?iID=1397` (startups) seen in a public listing; `FeederNode?iID=2` guessed. Unverified | Publisher ToS: headlines/snippets only, link back; no body copying |
-| Calcalist RSS | `RssConnector` | Public RSS | URL from memory. Unverified | same |
-| Google News RSS search | `SearchDiscoveryConnector` + `GoogleNewsRssSearch` | Public RSS search feed | Unverified. Discovery only: we store title/link/snippet/publisher as pointers; links are Google redirect URLs | Google ToS — if this becomes a product use a licensed search API (Brave/Serper/CSE) via `SearchProvider` |
-| Fixtures | `FixtureConnector` | local | Works | **Synthetic**, flagged, excluded from real counts |
+## In use
 
-## Researched, NOT built (and why)
-- **mr.gov.il / gov.il tender portals** — HTML/JS portals; no documented public API found; scraping not attempted (possible anti-bot, ToS). Best next target if an official feed/dataset is confirmed.
-- **MAYA (TASE) company filings** — valuable (public-company events) but site is bot-protected; look for an official/licensed feed.
-- **Municipality sites** — no uniform feed; needs per-site connectors; only where robots.txt/terms allow.
-- **Companies registrar changes** — only as snapshot open data on data.gov.il (no change feed verified).
-- **LinkedIn/Facebook/Telegram groups** — login/ToS walls; Telegram only for public channels via official API with consent, later.
+| Source | Connector | Status 2026-10-07 | Fresh? | robots.txt | Terms / notes |
+|---|---|---|---|---|---|
+| Globes RSS `FeederNode?iID=2` (home) | `RssConnector` | 200, 15 items | yes (same day) | `/webservice/` allowed | Publisher content: we keep title/snippet/link only |
+| Globes RSS `FeederNode?iID=607` (real estate & infrastructure) | `RssConnector` | 200, 15 items | yes | allowed | same |
+| Globes RSS `FeederNode?iID=9917` (Israel) | `RssConnector` | 200, 15 items | yes | allowed | same |
+| Globes RSS `FeederKeyword?iID=1397` (startups) | `RssConnector` | 200, 20 items | yes | allowed | **English content** — Hebrew rules extractor finds nothing |
+| ice.co.il `/rss` | `RssConnector` | 200, 20 items | yes | `Allow: /` | ToS not reviewed. Mostly media/gossip; 0 signals |
+| data.gov.il CKAN `package_search` + `datastore_search` | `CkanConnector` | 200 | see below | **`Disallow: /api/` for `*`** — see "Decisions needed" | Dataset licence per dataset (Beer Sheva: "Other (Open)") |
 
-## Known gaps in the source mix
-No source is *verified* to carry buyer intent in Hebrew at volume. News RSS gives events (openings, funding) → predicted needs.
-Tenders/קולות קוראים give explicit needs but I could not confirm a legal machine-readable feed.
+### data.gov.il datasets actually reached (rows dated from the rows themselves, not `metadata_modified`)
+| Dataset | Rows | Newest row | Verdict |
+|---|---|---|---|
+| `tender-br7` — מכרזים בעיר באר שבע (עיריית באר שבע) | 827 | update date 16/09/2026; 6 tenders with deadline ≥ 07/10/2026 | **The only fresh explicit-need dataset found** |
+| `tenders` — דוח מכרזים (מינהל הרכש הממשלתי) | 14,205 | 08.02.2021 | Stale. Prefilter correctly rejects all |
+| `exemptions` — התקשרויות בפטור | 165,705 | Feb 2021 | Stale |
+| `02` — מחקרים ממומנים, `callkorekitotvatikim`, `wplan_muni`, `aluyot-pituach`, `ogdan-education`, `goverment-domesticdebt` | — | no row date; resource files 2018–Aug 2026 | Matched the search words but are not needs (research grants list, cost tables, debt data). All rejected as stale (file date upper bound) or `no_event_pattern` |
+| Queries `תאגידים חדשים`, `היתרי בנייה` | 0 results | — | No such datasets |
+
+Searched with no fresh hit: `מכרז`, `tender`, `התקשרויות`, `פטור ממכרז`, `רכש`, `קול קורא`.
+Resource download URLs (`e.data.gov.il/.../download/...`) redirect to the SPA / are blocked by CloudFront for scripts — only `datastore_search` works.
+
+## Checked, not usable
+
+| Source | Result | Verdict |
+|---|---|---|
+| Calcalist `GeneralRSS/0,16335,L-8,00.xml` | **404** (earlier cloud run: Access Denied). `L-3` also 404; no official RSS link on the home page | NOT FOUND — kept in config to show graceful failure |
+| TheMarker `cmlink/1.145` | 200, 100 items, but robots.txt `Disallow: /*cmlink/*` | **Disallowed by robots — not used** |
+| gov.il publications (`/he/collectors/publications`, `PublicationApi`) | 301 → Cloudflare "Just a moment..." challenge, 403 | BLOCKED, not bypassed |
+| mr.gov.il | 307 → `/ilgstorefront/he`, anti-bot cookies; no RSS/API found | NOT FOUND |
+| Municipalities: Tel Aviv, Haifa (RSS exists but dead since 2023, no tenders), Jerusalem (403) | no tender feed | NOT FOUND / BLOCKED |
+| IEC, Mekorot, Netivei Israel (200, no feed), Israel Railways, land.gov.il (403) | no tender feed | NOT FOUND / BLOCKED |
+| Bizportal `/rss` | 404 | NOT FOUND |
+| Maariv breaking-news RSS | 200, general news | Not business — not added |
+| **Google News RSS** | answers 200, but the feed states it is for personal, non-commercial use | **Not used — awaiting explicit owner decision** |
+
+Not checked: universities, hospitals, other municipalities (Rishon, Petah Tikva, Netanya, Ashdod, Holon, Ramat Gan), ToS pages of Globes/ice.
+
+## Decisions needed (owner)
+1. **data.gov.il robots.txt disallows `/api/`.** The site's own SPA uses that API and the brief explicitly asked to use
+   CKAN, so this run used it politely (1.5 s/host, cached). Strictly, "respect robots.txt" means stop. Options: keep
+   (it is the documented developer API), ask data.gov.il for permission, or drop the source (→ 0 explicit needs).
+2. Google News RSS (see above).
+
+## Researched, NOT built
+- **MAYA (TASE) filings** — bot-protected; needs an official/licensed feed.
+- **LinkedIn/Facebook/Telegram groups** — login/ToS walls.
