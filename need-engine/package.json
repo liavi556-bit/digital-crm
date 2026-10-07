@@ -1,0 +1,24 @@
+{
+  "name": "need-engine-poc",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "ingest": "tsx src/cli.ts ingest",
+    "process": "tsx src/cli.ts process",
+    "poc": "tsx src/cli.ts poc",
+    "demo": "tsx src/cli.ts poc --fixtures",
+    "serve": "tsx src/server.ts",
+    "test": "tsx src/test.ts"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

@@ -1,0 +1,73 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Need Engine</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1b1f24;--mut:#6a7380;--line:#e3e6ea;--acc:#1f5eff;--warn:#b42318;--exp:#067647;--pred:#b54708}
+@media (prefers-color-scheme:dark){:root{--bg:#111418;--card:#1a1f26;--ink:#e8ebef;--mut:#9aa4b2;--line:#2a313b;--acc:#6d95ff;--warn:#ff8a80;--exp:#4ade80;--pred:#fbbf24}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,Arial,sans-serif}
+main{max-width:860px;margin:0 auto;padding:16px}h1{font-size:22px}a{color:var(--acc)}
+input,textarea,button{font:inherit;color:inherit}textarea,input[type=text],input[type=number],input[type=url]{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+button{padding:8px 14px;border:1px solid var(--line);border-radius:8px;background:var(--card);cursor:pointer}button.primary{background:var(--acc);color:#fff;border-color:var(--acc)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.grow{flex:1;min-width:140px}.mut{color:var(--mut);font-size:14px}
+.tag{display:inline-block;padding:1px 8px;border-radius:99px;font-size:13px;border:1px solid var(--line)}
+.exp{color:var(--exp);border-color:var(--exp)}.pred{color:var(--pred);border-color:var(--pred)}.warn{color:var(--warn)}
+.banner{background:#fee4e2;color:#7a271a;padding:8px 12px;border-radius:8px;margin:8px 0}
+.bar{height:6px;background:var(--line);border-radius:4px;overflow:hidden;min-width:60px}.bar i{display:block;height:100%;background:var(--acc)}
+blockquote{margin:8px 0;padding:6px 10px;border-inline-start:3px solid var(--line);color:var(--mut)}
+pre{white-space:pre-wrap;background:var(--bg);padding:10px;border-radius:8px}
+</style></head><body><main>
+<div id="start">
+  <h1>Need Engine — מה העסק שלך?</h1>
+  <div class="card">
+    <label class="mut">כתובת אתר העסק (אופציונלי)</label><input id="url" type="url" placeholder="https://...">
+    <label class="mut">או תיאור: שירותים, אזורי פעילות, סוג לקוחות</label>
+    <textarea id="desc" rows="4" placeholder="לדוגמה: חברת ניקיון ופוליש לעסקים בדרום הארץ"></textarea>
+    <div class="row"><div class="grow"><label class="mut">עסקה מינימלית ₪</label><input id="dmin" type="number"></div><div class="grow"><label class="mut">עסקה מקסימלית ₪</label><input id="dmax" type="number"></div></div>
+    <p class="row"><label><input type="checkbox" id="demo"> הצג נתוני דמו סינתטיים (לא אמיתיים — לבדיקת ה-pipeline בלבד)</label></p>
+    <div class="row"><button class="primary" onclick="go()">מצא לי הזדמנויות</button><button onclick="ingest()">רענן מקורות</button><a href="/admin">Admin / Debug</a><span id="st" class="mut"></span></div>
+  </div>
+</div>
+<div id="feed" hidden></div>
+<script>
+let profile=null,matches=[];const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ago=iso=>{if(!iso)return'תאריך לא ידוע';const h=(Date.now()-new Date(iso))/36e5;return h<1?'לפני פחות משעה':h<48?`לפני ${Math.round(h)} שעות`:`לפני ${Math.round(h/24)} ימים`};
+const CATS={cleaning:'ניקיון',signage:'שילוט',internet_telecom:'אינטרנט ותקשורת',local_advertising:'פרסום מקומי',photography:'צילום',web_development:'אתרים',digital_marketing:'שיווק דיגיטלי',ai_automation:'AI ואוטומציות',it_support:'IT',security:'אבטחה',construction_fitout:'שיפוץ והתאמות',recruiting:'גיוס',legal_accounting:'משפט/חשבונאות',logistics:'לוגיסטיקה',training:'הדרכה',software_dev:'פיתוח תוכנה',other:'אחר'};
+async function api(p,b){const r=await fetch(p,b?{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(b)}:{});return r.json()}
+async function go(){
+  const description=$('#desc').value.trim(),url=$('#url').value.trim();if(!description&&!url)return alert('הזן כתובת או תיאור');
+  $('#st').textContent='בונה פרופיל…';
+  profile=await api('/api/profile',{url,description,deal_min:+$('#dmin').value||null,deal_max:+$('#dmax').value||null});
+  const f=await api('/api/feed?profile_id='+profile.id+'&demo='+($('#demo').checked?1:0));matches=f.matches;
+  $('#st').textContent='';render(f)}
+async function ingest(){await api('/api/ingest',{});$('#st').textContent='איסוף רץ ברקע… (ראה Admin)'}
+function render(f){
+  $('#start').hidden=true;const el=$('#feed');el.hidden=false;
+  el.innerHTML=`<h1>🔥 ${matches.length} הזדמנויות בשבילך</h1>
+  <p class="mut">${esc(profile.name)} · שירותים: ${profile.services.map(s=>CATS[s]||s).join(', ')||'—'} · אזורים: ${profile.regions.join(', ')} · סה״כ במאגר: ${f.total_opportunities}</p>
+  ${f.demo?'<div class="banner">⚠️ נתוני דמו סינתטיים — לא הזדמנויות אמיתיות.</div>':''}
+  ${!matches.length?'<div class="card">אין הזדמנויות תואמות. אם עוד לא נאספו נתונים אמיתיים: הרץ "רענן מקורות", ובדוק ב-Admin אילו מקורות נכשלו.</div>':''}
+  <button onclick="location.reload()">← חזרה</button>${matches.map(card).join('')}`}
+function card(m,i){const o=m.opportunity;
+  const needs=[o.explicit_need?`<div><span class="tag exp">EXPLICIT — מפורש במקור</span> ${esc(o.explicit_need.need)}</div>`:'',
+   ...o.predicted_needs.map(n=>`<div class="row"><span class="tag pred">PREDICTED</span> ${esc(n.need)} <span class="bar"><i style="width:${n.confidence*100}%"></i></span><span class="mut">ביטחון מודל ${Math.round(n.confidence*100)}%</span></div>`)].join('');
+  return `<div class="card" id="c${o.id}">
+  <div class="row"><b class="grow">${esc(o.entity)}</b><span class="tag">התאמה ${m.score}</span>${o.high_quality?'<span class="tag exp">איכות גבוהה</span>':''}${o.synthetic?'<span class="tag warn">סינתטי</span>':''}</div>
+  <div>${esc(o.what_happened)}</div>
+  <div class="mut">${ago(o.published_at)} · ${o.location?esc(o.location):'מיקום לא צוין'} · ${o.event_type} · דחיפות ${o.urgency} · ${o.evidence.length} מקורות${o.estimated_value?` · שווי שצוין ₪${o.estimated_value.amount_ils.toLocaleString('he-IL')}`:' · שווי לא צוין במקור'}</div>
+  <div class="row mut">Intent ${o.intent_score}/100 · Confidence ${o.confidence_score}/100 <span class="mut">(ציוני מודל, לא סטטיסטיקה)</span></div>
+  <div style="margin:8px 0">${needs}</div>
+  <div><b>למה זו הזדמנות:</b><ul>${m.why.map(w=>`<li>${esc(w)}</li>`).join('')}</ul></div>
+  <blockquote>"${esc(o.evidence[0]?.quote)}" — <a href="${esc(o.source_url)}" target="_blank" rel="noopener">${esc(o.source_name)}</a></blockquote>
+  <div class="row"><a href="${esc(o.source_url)}" target="_blank" rel="noopener"><button>פתח מקור</button></a><button onclick="explore(${i})">חקור</button><button onclick="act(${i},'outreach')">הכן פנייה</button><button class="primary" onclick="act(${i},'action_plan')">פעל</button></div>
+  <div id="x${o.id}"></div></div>`}
+function explore(i){const m=matches[i],o=m.opportunity;
+  $('#x'+o.id).innerHTML=`<div class="card"><b>מקורות (${o.evidence.length})</b><ul>${o.evidence.map(e=>`<li><a href="${esc(e.source_url)}" target="_blank" rel="noopener">${esc(e.source_name)}</a> · ${ago(e.published_at)}<blockquote>"${esc(e.quote)}"</blockquote></li>`).join('')}</ul>
+  <b>פירוט התאמה</b><pre>${Object.entries(m.breakdown).map(([k,v])=>`${k}: ${(v*100).toFixed(0)}`).join('\n')}</pre>
+  <b>פתרונות אפשריים</b>: ${o.possible_solutions.map(esc).join(' · ')}<br><span class="mut">פג תוקף: ${o.expires_at?new Date(o.expires_at).toLocaleDateString('he-IL'):'—'} · extractor: ${esc(o.extractor)}</span></div>`}
+async function act(i,kind){const o=matches[i].opportunity;const d=await api('/api/action',{opp_id:o.id,profile_id:profile.id,kind});
+  $('#x'+o.id).innerHTML=`<div class="card"><b>${kind==='outreach'?'טיוטת פנייה':'Action Plan'}</b> <span class="tag warn">טיוטה — דורש אישור, לא נשלח דבר</span>
+  <ol>${d.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol><b>${esc(d.subject||'')}</b><pre id="b${o.id}">${esc(d.body)}</pre>
+  <div class="row"><button class="primary" onclick='appr(${o.id},true,${JSON.stringify(JSON.stringify(d))})'>אשר (ללא שליחה אוטומטית)</button><button onclick='appr(${o.id},false,${JSON.stringify(JSON.stringify(d))})'>בטל</button></div><div id="r${o.id}" class="mut"></div></div>`}
+async function appr(id,ok,dj){const r=await api('/api/action/approve',{opp_id:id,profile_id:profile.id,draft:JSON.parse(dj),approved:ok});$('#r'+id).textContent=r.note}
+</script></main></body></html>

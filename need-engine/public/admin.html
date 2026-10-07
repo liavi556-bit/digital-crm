@@ -1,0 +1,21 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Need Engine — Admin</title>
+<style>:root{--bg:#f6f7f9;--card:#fff;--ink:#1b1f24;--line:#e3e6ea;--mut:#6a7380}@media (prefers-color-scheme:dark){:root{--bg:#111418;--card:#1a1f26;--ink:#e8ebef;--line:#2a313b;--mut:#9aa4b2}}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,Arial,sans-serif}main{max-width:1100px;margin:0 auto;padding:16px}
+table{width:100%;border-collapse:collapse;background:var(--card)}td,th{border:1px solid var(--line);padding:5px 8px;text-align:start;vertical-align:top}.num{direction:ltr;text-align:end}
+.flow{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:10px 0}.box{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 14px;text-align:center}.box b{display:block;font-size:22px}
+.err{color:#b42318}.mut{color:var(--mut)}a{color:#1f5eff}button{padding:4px 10px}</style></head><body><main>
+<h1>Pipeline Debug</h1><p><a href="/">← חזרה</a> · <label><input type="checkbox" id="demo" onchange="load()"> נתוני דמו סינתטיים</label> · <button onclick="fetch('/api/ingest',{method:'POST',body:'{}'}).then(()=>setTimeout(load,3000))">הרץ איסוף</button></p>
+<div id="o"></div>
+<script>
+const esc=s=>String(s??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+async function load(){const d=+document.getElementById('demo').checked;const s=await (await fetch('/api/admin/stats?demo='+d)).json();const t=s.totals;
+const items=await (await fetch('/api/admin/items?demo='+d)).json();
+const box=(k,v)=>`<div class="box"><b>${v}</b>${k}</div>`;
+document.getElementById('o').innerHTML=`${s.synthetic?'<p class="err">⚠️ נתונים סינתטיים</p>':''}
+<div class="flow">${box('Raw items',t.raw_items)}→${box('נפסלו',t.rejected)}→${box('Signals',t.signals)}→${box('Opportunities',t.opportunities)}→${box('Explicit בלבד',t.explicit_only)}${box('Explicit+Predicted',t.explicit_plus_predicted)}${box('Predicted בלבד',t.predicted_only)}${box('Duplicates',t.duplicates_merged)}${box('איכות גבוהה',t.high_quality)}</div>
+<h3>Connectors (ריצה אחרונה)</h3><table><tr><th>connector</th><th>status</th><th>fetched</th><th>new</th><th>error</th></tr>${s.connectors.map(c=>`<tr><td>${esc(c.connector)}</td><td class="${c.status==='error'?'err':''}">${c.status}</td><td class="num">${c.fetched??''}</td><td class="num">${c.inserted??''}</td><td class="err">${esc((c.error||'').slice(0,160))}</td></tr>`).join('')||'<tr><td colspan=5 class="mut">לא הורצו connectors</td></tr>'}</table>
+<h3>לפי מקור</h3><table><tr><th>type</th><th>source</th><th>raw</th><th>rejected</th><th>duplicates</th><th>opps</th></tr>${s.bySource.map(r=>`<tr><td>${r.source_type}</td><td>${esc(r.source)}</td><td class="num">${r.raw}</td><td class="num">${r.rejected}</td><td class="num">${r.duplicates}</td><td class="num">${r.opportunities}</td></tr>`).join('')}</table>
+<h3>סיבות החלטה</h3><table><tr><th>stage</th><th>verdict</th><th>reason</th><th>n</th></tr>${s.reasons.map(r=>`<tr><td>${r.stage}</td><td>${r.verdict}</td><td>${esc(r.reason)}</td><td class="num">${r.n}</td></tr>`).join('')}</table>
+<h3>פריטים ו-decision trail</h3><table><tr><th>#</th><th>source</th><th>title</th><th>status</th><th>trail</th></tr>${items.map(i=>`<tr><td>${i.id}</td><td>${esc(i.source)}</td><td><a href="${esc(i.source_url)}" target="_blank" rel="noopener">${esc(i.title.slice(0,90))}</a></td><td>${i.status}</td><td>${i.decisions.map(x=>`${x.stage}:${x.verdict}(${esc(x.reason)})`).join(' → ')}</td></tr>`).join('')}</table>`}
+load();
+</script></main></body></html>

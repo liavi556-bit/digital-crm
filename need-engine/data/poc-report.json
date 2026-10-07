@@ -1,0 +1,577 @@
+{
+  "generated_at": "2026-10-07T12:37:24.706Z",
+  "extractor": "rules-v1",
+  "real": {
+    "synthetic": false,
+    "totals": {
+      "raw_items": 0,
+      "rejected": 0,
+      "signals": 0,
+      "opportunities": 0,
+      "explicit_only": 0,
+      "explicit_plus_predicted": 0,
+      "predicted_only": 0,
+      "duplicates_merged": 0,
+      "high_quality": 0
+    },
+    "connectors": [
+      {
+        "connector": "ckan:היתרי בנייה",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://data.gov.il/api/3/action/package_search?q=%D7%94%D7%99%D7%AA%D7%A8%D7%99%20%D7%91%D7%A0%D7%99%D7%99%D7%94&rows=5&sort=metadata_modified+desc: HTTP 403 https://data.gov.il/api/3/action/package_search?q=%D7%94%D7%99%D7%AA%D7%A8%D7%99%20%D7%91%D7%A0%D7%99%D7%99%D7%94&rows=5&sort=metadata_modified+desc",
+        "finished_at": "2026-10-07T12:37:24.609Z"
+      },
+      {
+        "connector": "ckan:מכרזים",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://data.gov.il/api/3/action/package_search?q=%D7%9E%D7%9B%D7%A8%D7%96%D7%99%D7%9D&rows=5&sort=metadata_modified+desc: HTTP 403 https://data.gov.il/api/3/action/package_search?q=%D7%9E%D7%9B%D7%A8%D7%96%D7%99%D7%9D&rows=5&sort=metadata_modified+desc",
+        "finished_at": "2026-10-07T12:37:24.028Z"
+      },
+      {
+        "connector": "ckan:קול קורא",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://data.gov.il/api/3/action/package_search?q=%D7%A7%D7%95%D7%9C%20%D7%A7%D7%95%D7%A8%D7%90&rows=5&sort=metadata_modified+desc: HTTP 403 https://data.gov.il/api/3/action/package_search?q=%D7%A7%D7%95%D7%9C%20%D7%A7%D7%95%D7%A8%D7%90&rows=5&sort=metadata_modified+desc",
+        "finished_at": "2026-10-07T12:37:24.208Z"
+      },
+      {
+        "connector": "ckan:תאגידים חדשים",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://data.gov.il/api/3/action/package_search?q=%D7%AA%D7%90%D7%92%D7%99%D7%93%D7%99%D7%9D%20%D7%97%D7%93%D7%A9%D7%99%D7%9D&rows=5&sort=metadata_modified+desc: HTTP 403 https://data.gov.il/api/3/action/package_search?q=%D7%AA%D7%90%D7%92%D7%99%D7%93%D7%99%D7%9D%20%D7%97%D7%93%D7%A9%D7%99%D7%9D&rows=5&sort=metadata_modified+desc",
+        "finished_at": "2026-10-07T12:37:24.407Z"
+      },
+      {
+        "connector": "rss:Calcalist - news",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://www.calcalist.co.il/GeneralRSS/0,16335,L-8,00.xml: HTTP 403 https://www.calcalist.co.il/GeneralRSS/0,16335,L-8,00.xml",
+        "finished_at": "2026-10-07T12:37:21.790Z"
+      },
+      {
+        "connector": "rss:Globes - news",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://www.globes.co.il/webservice/rss/rssfeeder.asmx/FeederNode?iID=2: HTTP 403 https://www.globes.co.il/webservice/rss/rssfeeder.asmx/FeederNode?iID=2",
+        "finished_at": "2026-10-07T12:37:21.637Z"
+      },
+      {
+        "connector": "rss:Globes - startups",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://www.globes.co.il/WebService/Rss/RssFeeder.asmx/FeederKeyword?iID=1397: HTTP 403 https://www.globes.co.il/WebService/Rss/RssFeeder.asmx/FeederKeyword?iID=1397",
+        "finished_at": "2026-10-07T12:37:21.611Z"
+      },
+      {
+        "connector": "search:google-news-rss:גיוס הון סבב השקעה חברה ישראלית",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://news.google.com/rss/search?q=%D7%92%D7%99%D7%95%D7%A1%20%D7%94%D7%95%D7%9F%20%D7%A1%D7%91%D7%91%20%D7%94%D7%A9%D7%A7%D7%A2%D7%94%20%D7%97%D7%91%D7%A8%D7%94%20%D7%99%D7%A9%D7%A8%D7%90%D7%9C%D7%99%D7%AA%20when%3A30d&hl=he&gl=IL&ceid=IL:he: HTTP 403 https://news.google.com/rss/search?q=%D7%92%D7%99%D7%95%D7%A1%20%D7%94%D7%95%D7%9F%20%D7%A1%D7%91%D7%91%20%D7%94%D7%A9%D7%A7%D7%A2%D7%94%20%D7%97%D7%91%D7%A8%D7%94%20%D7%99%D7%A9%D7%A8%D7%90%D7%9C%D7%99%D7%AA%20when%3A30d&hl=he&gl=",
+        "finished_at": "2026-10-07T12:37:22.599Z"
+      },
+      {
+        "connector": "search:google-news-rss:השקת מוצר חדש חברה",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://news.google.com/rss/search?q=%D7%94%D7%A9%D7%A7%D7%AA%20%D7%9E%D7%95%D7%A6%D7%A8%20%D7%97%D7%93%D7%A9%20%D7%97%D7%91%D7%A8%D7%94%20when%3A30d&hl=he&gl=IL&ceid=IL:he: HTTP 403 https://news.google.com/rss/search?q=%D7%94%D7%A9%D7%A7%D7%AA%20%D7%9E%D7%95%D7%A6%D7%A8%20%D7%97%D7%93%D7%A9%20%D7%97%D7%91%D7%A8%D7%94%20when%3A30d&hl=he&gl=IL&ceid=IL:he",
+        "finished_at": "2026-10-07T12:37:23.601Z"
+      },
+      {
+        "connector": "search:google-news-rss:חנות חדשה נפתחה",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://news.google.com/rss/search?q=%D7%97%D7%A0%D7%95%D7%AA%20%D7%97%D7%93%D7%A9%D7%94%20%D7%A0%D7%A4%D7%AA%D7%97%D7%94%20when%3A30d&hl=he&gl=IL&ceid=IL:he: HTTP 403 https://news.google.com/rss/search?q=%D7%97%D7%A0%D7%95%D7%AA%20%D7%97%D7%93%D7%A9%D7%94%20%D7%A0%D7%A4%D7%AA%D7%97%D7%94%20when%3A30d&hl=he&gl=IL&ceid=IL:he",
+        "finished_at": "2026-10-07T12:37:22.196Z"
+      },
+      {
+        "connector": "search:google-news-rss:מכרז פורסם רשות מקומית",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://news.google.com/rss/search?q=%D7%9E%D7%9B%D7%A8%D7%96%20%D7%A4%D7%95%D7%A8%D7%A1%D7%9D%20%D7%A8%D7%A9%D7%95%D7%AA%20%D7%9E%D7%A7%D7%95%D7%9E%D7%99%D7%AA%20when%3A30d&hl=he&gl=IL&ceid=IL:he: HTTP 403 https://news.google.com/rss/search?q=%D7%9E%D7%9B%D7%A8%D7%96%20%D7%A4%D7%95%D7%A8%D7%A1%D7%9D%20%D7%A8%D7%A9%D7%95%D7%AA%20%D7%9E%D7%A7%D7%95%D7%9E%D7%99%D7%AA%20when%3A30d&hl=he&gl=IL&ceid=IL:he",
+        "finished_at": "2026-10-07T12:37:22.801Z"
+      },
+      {
+        "connector": "search:google-news-rss:מפעל חדש הנחת אבן פינה",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://news.google.com/rss/search?q=%D7%9E%D7%A4%D7%A2%D7%9C%20%D7%97%D7%93%D7%A9%20%D7%94%D7%A0%D7%97%D7%AA%20%D7%90%D7%91%D7%9F%20%D7%A4%D7%99%D7%A0%D7%94%20when%3A30d&hl=he&gl=IL&ceid=IL:he: HTTP 403 https://news.google.com/rss/search?q=%D7%9E%D7%A4%D7%A2%D7%9C%20%D7%97%D7%93%D7%A9%20%D7%94%D7%A0%D7%97%D7%AA%20%D7%90%D7%91%D7%9F%20%D7%A4%D7%99%D7%A0%D7%94%20when%3A30d&hl=he&gl=IL&ceid=IL:he",
+        "finished_at": "2026-10-07T12:37:23.200Z"
+      },
+      {
+        "connector": "search:google-news-rss:מרכז לוגיסטי חדש",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://news.google.com/rss/search?q=%D7%9E%D7%A8%D7%9B%D7%96%20%D7%9C%D7%95%D7%92%D7%99%D7%A1%D7%98%D7%99%20%D7%97%D7%93%D7%A9%20when%3A30d&hl=he&gl=IL&ceid=IL:he: HTTP 403 https://news.google.com/rss/search?q=%D7%9E%D7%A8%D7%9B%D7%96%20%D7%9C%D7%95%D7%92%D7%99%D7%A1%D7%98%D7%99%20%D7%97%D7%93%D7%A9%20when%3A30d&hl=he&gl=IL&ceid=IL:he",
+        "finished_at": "2026-10-07T12:37:23.801Z"
+      },
+      {
+        "connector": "search:google-news-rss:משרדים חדשים עברה חברה",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://news.google.com/rss/search?q=%D7%9E%D7%A9%D7%A8%D7%93%D7%99%D7%9D%20%D7%97%D7%93%D7%A9%D7%99%D7%9D%20%D7%A2%D7%91%D7%A8%D7%94%20%D7%97%D7%91%D7%A8%D7%94%20when%3A30d&hl=he&gl=IL&ceid=IL:he: HTTP 403 https://news.google.com/rss/search?q=%D7%9E%D7%A9%D7%A8%D7%93%D7%99%D7%9D%20%D7%97%D7%93%D7%A9%D7%99%D7%9D%20%D7%A2%D7%91%D7%A8%D7%94%20%D7%97%D7%91%D7%A8%D7%94%20when%3A30d&hl=he&gl=IL&ceid=IL:he",
+        "finished_at": "2026-10-07T12:37:22.399Z"
+      },
+      {
+        "connector": "search:google-news-rss:נפתח סניף חדש",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://news.google.com/rss/search?q=%D7%A0%D7%A4%D7%AA%D7%97%20%D7%A1%D7%A0%D7%99%D7%A3%20%D7%97%D7%93%D7%A9%20when%3A30d&hl=he&gl=IL&ceid=IL:he: HTTP 403 https://news.google.com/rss/search?q=%D7%A0%D7%A4%D7%AA%D7%97%20%D7%A1%D7%A0%D7%99%D7%A3%20%D7%97%D7%93%D7%A9%20when%3A30d&hl=he&gl=IL&ceid=IL:he",
+        "finished_at": "2026-10-07T12:37:21.996Z"
+      },
+      {
+        "connector": "search:google-news-rss:פרויקט חדש מסירת מפתחות",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://news.google.com/rss/search?q=%D7%A4%D7%A8%D7%95%D7%99%D7%A7%D7%98%20%D7%97%D7%93%D7%A9%20%D7%9E%D7%A1%D7%99%D7%A8%D7%AA%20%D7%9E%D7%A4%D7%AA%D7%97%D7%95%D7%AA%20when%3A30d&hl=he&gl=IL&ceid=IL:he: HTTP 403 https://news.google.com/rss/search?q=%D7%A4%D7%A8%D7%95%D7%99%D7%A7%D7%98%20%D7%97%D7%93%D7%A9%20%D7%9E%D7%A1%D7%99%D7%A8%D7%AA%20%D7%9E%D7%A4%D7%AA%D7%97%D7%95%D7%AA%20when%3A30d&hl=he&gl=IL&ceid=IL:he",
+        "finished_at": "2026-10-07T12:37:24.001Z"
+      },
+      {
+        "connector": "search:google-news-rss:פתיחת סניף חדש",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://news.google.com/rss/search?q=%D7%A4%D7%AA%D7%99%D7%97%D7%AA%20%D7%A1%D7%A0%D7%99%D7%A3%20%D7%97%D7%93%D7%A9%20when%3A30d&hl=he&gl=IL&ceid=IL:he: HTTP 403 https://news.google.com/rss/search?q=%D7%A4%D7%AA%D7%99%D7%97%D7%AA%20%D7%A1%D7%A0%D7%99%D7%A3%20%D7%97%D7%93%D7%A9%20when%3A30d&hl=he&gl=IL&ceid=IL:he",
+        "finished_at": "2026-10-07T12:37:21.808Z"
+      },
+      {
+        "connector": "search:google-news-rss:קול קורא פורסם",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://news.google.com/rss/search?q=%D7%A7%D7%95%D7%9C%20%D7%A7%D7%95%D7%A8%D7%90%20%D7%A4%D7%95%D7%A8%D7%A1%D7%9D%20when%3A30d&hl=he&gl=IL&ceid=IL:he: HTTP 403 https://news.google.com/rss/search?q=%D7%A7%D7%95%D7%9C%20%D7%A7%D7%95%D7%A8%D7%90%20%D7%A4%D7%95%D7%A8%D7%A1%D7%9D%20when%3A30d&hl=he&gl=IL&ceid=IL:he",
+        "finished_at": "2026-10-07T12:37:23.000Z"
+      },
+      {
+        "connector": "search:google-news-rss:רכישת חברה הושלמה",
+        "status": "error",
+        "fetched": 0,
+        "inserted": 0,
+        "error": "fetch failed: https://news.google.com/rss/search?q=%D7%A8%D7%9B%D7%99%D7%A9%D7%AA%20%D7%97%D7%91%D7%A8%D7%94%20%D7%94%D7%95%D7%A9%D7%9C%D7%9E%D7%94%20when%3A30d&hl=he&gl=IL&ceid=IL:he: HTTP 403 https://news.google.com/rss/search?q=%D7%A8%D7%9B%D7%99%D7%A9%D7%AA%20%D7%97%D7%91%D7%A8%D7%94%20%D7%94%D7%95%D7%A9%D7%9C%D7%9E%D7%94%20when%3A30d&hl=he&gl=IL&ceid=IL:he",
+        "finished_at": "2026-10-07T12:37:23.400Z"
+      }
+    ],
+    "bySource": [],
+    "reasons": []
+  },
+  "synthetic": {
+    "synthetic": true,
+    "totals": {
+      "raw_items": 10,
+      "rejected": 2,
+      "signals": 8,
+      "opportunities": 7,
+      "explicit_only": 1,
+      "explicit_plus_predicted": 2,
+      "predicted_only": 4,
+      "duplicates_merged": 1,
+      "high_quality": 0
+    },
+    "connectors": [
+      {
+        "connector": "fixture:synthetic",
+        "status": "ok",
+        "fetched": 10,
+        "inserted": 10,
+        "error": null,
+        "finished_at": "2026-10-07T12:37:24.646Z"
+      }
+    ],
+    "bySource": [
+      {
+        "source_type": "fixture",
+        "source": "פורטל מכרזים דמו",
+        "raw": 2,
+        "rejected": 0,
+        "duplicates": 0,
+        "opportunities": 2,
+        "pending": 0
+      },
+      {
+        "source_type": "fixture",
+        "source": "חדשות-דמו א",
+        "raw": 1,
+        "rejected": 0,
+        "duplicates": 0,
+        "opportunities": 1,
+        "pending": 0
+      },
+      {
+        "source_type": "fixture",
+        "source": "חדשות-דמו ב",
+        "raw": 1,
+        "rejected": 0,
+        "duplicates": 1,
+        "opportunities": 0,
+        "pending": 0
+      },
+      {
+        "source_type": "fixture",
+        "source": "חדשות-דמו ג",
+        "raw": 1,
+        "rejected": 0,
+        "duplicates": 0,
+        "opportunities": 1,
+        "pending": 0
+      },
+      {
+        "source_type": "fixture",
+        "source": "חדשות-דמו ד",
+        "raw": 1,
+        "rejected": 0,
+        "duplicates": 0,
+        "opportunities": 1,
+        "pending": 0
+      },
+      {
+        "source_type": "fixture",
+        "source": "חדשות-דמו ה",
+        "raw": 1,
+        "rejected": 0,
+        "duplicates": 0,
+        "opportunities": 1,
+        "pending": 0
+      },
+      {
+        "source_type": "fixture",
+        "source": "חדשות-דמו ו",
+        "raw": 1,
+        "rejected": 0,
+        "duplicates": 0,
+        "opportunities": 1,
+        "pending": 0
+      },
+      {
+        "source_type": "fixture",
+        "source": "חדשות-דמו ז",
+        "raw": 1,
+        "rejected": 1,
+        "duplicates": 0,
+        "opportunities": 0,
+        "pending": 0
+      },
+      {
+        "source_type": "fixture",
+        "source": "חדשות-דמו ח",
+        "raw": 1,
+        "rejected": 1,
+        "duplicates": 0,
+        "opportunities": 0,
+        "pending": 0
+      }
+    ],
+    "reasons": [
+      {
+        "stage": "dedupe",
+        "verdict": "merged",
+        "reason": "duplicate_of_opportunity_1",
+        "n": 1
+      },
+      {
+        "stage": "dedupe",
+        "verdict": "new_opportunity",
+        "reason": "opportunity_1",
+        "n": 1
+      },
+      {
+        "stage": "dedupe",
+        "verdict": "new_opportunity",
+        "reason": "opportunity_2",
+        "n": 1
+      },
+      {
+        "stage": "dedupe",
+        "verdict": "new_opportunity",
+        "reason": "opportunity_3",
+        "n": 1
+      },
+      {
+        "stage": "dedupe",
+        "verdict": "new_opportunity",
+        "reason": "opportunity_4",
+        "n": 1
+      },
+      {
+        "stage": "dedupe",
+        "verdict": "new_opportunity",
+        "reason": "opportunity_5",
+        "n": 1
+      },
+      {
+        "stage": "dedupe",
+        "verdict": "new_opportunity",
+        "reason": "opportunity_6",
+        "n": 1
+      },
+      {
+        "stage": "dedupe",
+        "verdict": "new_opportunity",
+        "reason": "opportunity_7",
+        "n": 1
+      },
+      {
+        "stage": "extract",
+        "verdict": "passed",
+        "reason": "NEW_LOCATION",
+        "n": 2
+      },
+      {
+        "stage": "extract",
+        "verdict": "passed",
+        "reason": "TENDER_PUBLISHED+explicit",
+        "n": 2
+      },
+      {
+        "stage": "extract",
+        "verdict": "passed",
+        "reason": "CONSTRUCTION_PROJECT",
+        "n": 1
+      },
+      {
+        "stage": "extract",
+        "verdict": "passed",
+        "reason": "FUNDING_ROUND",
+        "n": 1
+      },
+      {
+        "stage": "extract",
+        "verdict": "passed",
+        "reason": "MERGER_ACQUISITION",
+        "n": 1
+      },
+      {
+        "stage": "extract",
+        "verdict": "passed",
+        "reason": "PRODUCT_LAUNCH+explicit",
+        "n": 1
+      },
+      {
+        "stage": "extract",
+        "verdict": "rejected",
+        "reason": "no_event_pattern",
+        "n": 1
+      },
+      {
+        "stage": "prefilter",
+        "verdict": "passed",
+        "reason": "ok",
+        "n": 9
+      },
+      {
+        "stage": "prefilter",
+        "verdict": "rejected",
+        "reason": "stale",
+        "n": 1
+      }
+    ]
+  },
+  "profiles": {
+    "real:ניקיון/פוליש": {
+      "matches": 0,
+      "top": []
+    },
+    "real:בניית אתרים/שיווק": {
+      "matches": 0,
+      "top": []
+    },
+    "real:AI/אוטומציות": {
+      "matches": 0,
+      "top": []
+    },
+    "synthetic:ניקיון/פוליש": {
+      "matches": 4,
+      "top": [
+        {
+          "score": 88,
+          "entity": "עיריית דמוסיטי",
+          "what": "עיריית דמוסיטי מפרסמת מכרז לשירותי ניקיון ואחזקה במוסדות חינוך",
+          "url": "fixture://synthetic/4",
+          "kinds": [
+            {
+              "category": "cleaning",
+              "kind": "explicit",
+              "confidence": 1
+            }
+          ]
+        },
+        {
+          "score": 82,
+          "entity": "סופר-דמו",
+          "what": "סופר-דמו פותחת סניף חדש בבאר שבע",
+          "url": "fixture://synthetic/1",
+          "kinds": [
+            {
+              "category": "cleaning",
+              "kind": "predicted",
+              "confidence": 0.8
+            }
+          ]
+        },
+        {
+          "score": 75,
+          "entity": "בנייני-דמו",
+          "what": "בנייני-דמו מסרה מפתחות בפרויקט חדש בנתניה",
+          "url": "fixture://synthetic/6",
+          "kinds": [
+            {
+              "category": "cleaning",
+              "kind": "predicted",
+              "confidence": 0.8
+            },
+            {
+              "category": "construction_fitout",
+              "kind": "predicted",
+              "confidence": 0.55
+            }
+          ]
+        },
+        {
+          "score": 70,
+          "entity": "סטארטאפ-דמו",
+          "what": "סטארטאפ-דמו גייס 25 מיליון דולר בסבב א׳",
+          "url": "fixture://synthetic/3",
+          "kinds": [
+            {
+              "category": "construction_fitout",
+              "kind": "predicted",
+              "confidence": 0.5
+            }
+          ]
+        }
+      ]
+    },
+    "synthetic:בניית אתרים/שיווק": {
+      "matches": 5,
+      "top": [
+        {
+          "score": 77,
+          "entity": "סטארטאפ-דמו",
+          "what": "סטארטאפ-דמו גייס 25 מיליון דולר בסבב א׳",
+          "url": "fixture://synthetic/3",
+          "kinds": [
+            {
+              "category": "digital_marketing",
+              "kind": "predicted",
+              "confidence": 0.7
+            },
+            {
+              "category": "web_development",
+              "kind": "predicted",
+              "confidence": 0.45
+            }
+          ]
+        },
+        {
+          "score": 74,
+          "entity": "קופי-דמו",
+          "what": "קופי-דמו משיקה אפליקציה חדשה לשירות לקוחות",
+          "url": "fixture://synthetic/7",
+          "kinds": [
+            {
+              "category": "web_development",
+              "kind": "explicit",
+              "confidence": 1
+            },
+            {
+              "category": "digital_marketing",
+              "kind": "predicted",
+              "confidence": 0.8
+            }
+          ]
+        },
+        {
+          "score": 65,
+          "entity": "משרד-דמו",
+          "what": "משרד-דמו מבקש הצעות לבניית אתר אינטרנט חדש ומערכת ניהול תוכן",
+          "url": "fixture://synthetic/5",
+          "kinds": [
+            {
+              "category": "web_development",
+              "kind": "predicted",
+              "confidence": 0.5
+            },
+            {
+              "category": "digital_marketing",
+              "kind": "predicted",
+              "confidence": 0.5
+            }
+          ]
+        },
+        {
+          "score": 58,
+          "entity": "טכנו-דמו",
+          "what": "טכנו-דמו רוכשת את חברת דאטה-דמו",
+          "url": "fixture://synthetic/8",
+          "kinds": [
+            {
+              "category": "digital_marketing",
+              "kind": "predicted",
+              "confidence": 0.55
+            }
+          ]
+        },
+        {
+          "score": 56,
+          "entity": "סופר-דמו",
+          "what": "סופר-דמו פותחת סניף חדש בבאר שבע",
+          "url": "fixture://synthetic/1",
+          "kinds": [
+            {
+              "category": "web_development",
+              "kind": "predicted",
+              "confidence": 0.45
+            }
+          ]
+        }
+      ]
+    },
+    "synthetic:AI/אוטומציות": {
+      "matches": 2,
+      "top": [
+        {
+          "score": 71,
+          "entity": "סטארטאפ-דמו",
+          "what": "סטארטאפ-דמו גייס 25 מיליון דולר בסבב א׳",
+          "url": "fixture://synthetic/3",
+          "kinds": [
+            {
+              "category": "ai_automation",
+              "kind": "predicted",
+              "confidence": 0.55
+            }
+          ]
+        },
+        {
+          "score": 62,
+          "entity": "קופי-דמו",
+          "what": "קופי-דמו משיקה אפליקציה חדשה לשירות לקוחות",
+          "url": "fixture://synthetic/7",
+          "kinds": [
+            {
+              "category": "ai_automation",
+              "kind": "predicted",
+              "confidence": 0.42
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
