@@ -1,5 +1,19 @@
 # Sources
 
+## Round 2 status (2026-10-07) — current
+| Source | Connector | Status |
+|---|---|---|
+| Dekel bids `bids.dekel.co.il` (public list + item pages) | `DekelBidsConnector` | **enabled** · 18 items · no robots.txt · ToS silent on automation (written OK recommended) |
+| Haifa muni tenders `www2.haifa.muni.il/Michrazim/` | `HaifaTendersConnector` | **enabled** · 12 items · robots 404 · no ToS published · Reblaze WAF (no challenge seen; flaky network) |
+| Tel Aviv GIS layer 499 (construction sites) | `TlvConstructionSitesConnector` | **enabled** · 53 org-held sites in 120 days · no robots.txt · portal licence "any purpose with credit" (layer not confirmed in portal) · private holders never stored |
+| data.gov.il CKAN | `CkanConnector` | **disabled** — robots.txt `Disallow: /api/`; the allowed `/dataset/.../download/` path returns CloudFront 403 |
+| Google News RSS | `SearchDiscoveryConnector` | **disabled** — personal, non-commercial use only |
+| Globes / ice / Calcalist RSS | `RssConnector` | not enabled this round (general news de-prioritised by owner) |
+Full benchmark of ~25 sources: `docs/SOURCE-BENCHMARK.md`.
+
+---
+## Round 1 notes
+
 **Verified 2026-10-07 from an open network** (Windows desktop, plain `curl`/`fetch`, UA `NeedEnginePOC/0.1`).
 Nothing here bypasses login, CAPTCHA, Cloudflare challenges or rate limits. One reasonable attempt per blocking source.
 

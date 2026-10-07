@@ -1,0 +1,117 @@
+{
+ "source": "מכבי שירותי בריאות – בקשות להצעות מחיר/מידע (www.maccabi4u.co.il/bids/)",
+ "access_method": "HTML: https://www.maccabi4u.co.il/bids/. ברינדור הראשוני מוצגות כל הבקשות הפעילות (data-active-count=9), כל אחת עם כותרת, תאריך פרסום, מועד אחרון, איש קשר וקישור PDF ב-/media/. הלשוניות 'מכרזים', 'ספק יחיד', 'טען עוד' ודפי הפרטים נטענים מ-/umbraco/surface/tenders/..., שהוא נתיב אסור ב-robots, ולכן לא נוצלו",
+ "robots": "https://www.maccabi4u.co.il/robots.txt: 'Allow: /' עם 'Disallow: /umbraco/' ו-'Disallow: /api/'. לכן /bids/ ו-/media/*.pdf מותרים, ונקודות הקצה של הרשימה המלאה (/umbraco/) אסורות",
+ "tos": "מתוך https://www.maccabi4u.co.il/23085/policies_and_procedures/terms_of_use/: 'אין להעתיק, להציג, להפיץ, לשכפל או למסור לצד שלישי כלשהו את האתר או תכניו ללא קבלת הסכמתה של מכבי מראש ובכתב.' כלומר שימוש מסחרי או הפצה רק באישור בכתב (הערכה שלנו: שימוש פנימי בעובדות בלבד, כמו גוף, נושא ומועד, הוא בסיכון נמוך יותר, אבל זו לא חוות דעת משפטית)",
+ "freshness": "הפריט האחרון פורסם ב-30/09/2026. 9 בקשות פעילות (7 מהן פורסמו בספטמבר 2026). בארכיון 1,061 פריטים (data-total); טווח הזמן של הארכיון לא ידוע",
+ "items": [
+  {
+   "title": "בקשה להצעה לכנס תכניות עבודה (overnight) מחוז י-ם שפלה 2026-2027",
+   "url": "https://www.maccabi4u.co.il/media/4pralfwp/%D7%91%D7%9C%D7%9D-%D7%9C%D7%9B%D7%A0%D7%A1-%D7%AA%D7%9B%D7%A0%D7%99%D7%95%D7%AA-%D7%A2%D7%91%D7%95%D7%93%D7%94-2026.pdf",
+   "date": "2026-09-30",
+   "deadline": "2026-10-10",
+   "snippet": "מועד פרסום: 30.09.2026 | מועד אחרון להגשה: 10.10.2026",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": true,
+   "reason": "בקשה להצעת מחיר פתוחה של מכבי (תחום: אחר), הגשה עד 10.10.2026"
+  },
+  {
+   "title": "בקשה להצעת מחיר לאספקת תגי שם לעובדי מכבי",
+   "url": "https://www.maccabi4u.co.il/media/hechr5cv/%D7%91%D7%9C%D7%9E-%D7%AA%D7%92%D7%99-%D7%A9%D7%9D.pdf",
+   "date": "2026-09-24",
+   "deadline": "2026-10-11",
+   "snippet": "מועד פרסום: 24.09.2026 | מועד אחרון להגשה: 11.10.2026",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": true,
+   "reason": "בקשה להצעת מחיר פתוחה של מכבי (תחום: משק), הגשה עד 11.10.2026"
+  },
+  {
+   "title": "בקשה להצעת מחיר לאספקת מתכלים לתחנות איסוף",
+   "url": "https://www.maccabi4u.co.il/media/0krk0mml/%D7%91%D7%9C%D7%9E-%D7%9E%D7%AA%D7%9B%D7%9C%D7%99%D7%9D-%D7%9C%D7%AA%D7%97%D7%A0%D7%95%D7%AA-%D7%90%D7%99%D7%A1%D7%95%D7%A3_%D7%9E%D7%A2%D7%95%D7%93%D7%9B%D7%9F.pdf",
+   "date": "2026-09-17",
+   "deadline": "2026-10-15",
+   "snippet": "מועד פרסום: 17.09.2026 | מועד אחרון להגשה: 15.10.2026",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": true,
+   "reason": "בקשה להצעת מחיר פתוחה של מכבי (תחום: אחר), הגשה עד 15.10.2026"
+  },
+  {
+   "title": "בקשה להצעה לאירוע רווחה (טיול overnight) מחוז י-ם שפלה 2027",
+   "url": "https://www.maccabi4u.co.il/media/0evibjdd/%D7%91%D7%9C%D7%9D-%D7%9C%D7%98%D7%99%D7%95%D7%9C-%D7%9E%D7%97%D7%95%D7%96%D7%99-2027.pdf",
+   "date": "2026-09-15",
+   "deadline": "2026-10-10",
+   "snippet": "מועד פרסום: 15.09.2026 | מועד אחרון להגשה: 10.10.2026",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": true,
+   "reason": "בקשה להצעת מחיר פתוחה של מכבי (תחום: אחר), הגשה עד 10.10.2026"
+  },
+  {
+   "title": "בקשה להצעת מחיר לאספקת חולץ סיכות חד פעמי STAPLE EXTRACTOR",
+   "url": "https://www.maccabi4u.co.il/media/gvilqbqg/%D7%91%D7%A7%D7%A9%D7%94-%D7%9C%D7%94%D7%A6%D7%A2%D7%AA-%D7%9E%D7%97%D7%99%D7%A8-%D7%97%D7%95%D7%9C%D7%A5-%D7%A1%D7%99%D7%9B%D7%95%D7%AA-%D7%97%D7%93-%D7%A4%D7%A2%D7%9E%D7%99.pdf",
+   "date": "2026-09-15",
+   "deadline": "2026-10-15",
+   "snippet": "מועד פרסום: 15.09.2026 | מועד אחרון להגשה: 15.10.2026",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": true,
+   "reason": "בקשה להצעת מחיר פתוחה של מכבי (תחום: רפואה), הגשה עד 15.10.2026"
+  },
+  {
+   "title": "בקשה להצעת מחיר לאספקת ערכות שפך לציטוטוקסיקה",
+   "url": "https://www.maccabi4u.co.il/media/sjwb23vh/%D7%91%D7%A7%D7%A9%D7%94-%D7%9C%D7%94%D7%A6%D7%A2%D7%AA-%D7%9E%D7%97%D7%99%D7%A8-%D7%A2%D7%A8%D7%9B%D7%AA-%D7%A9%D7%A4%D7%9A-%D7%9C%D7%A6%D7%99%D7%98%D7%95%D7%98%D7%95%D7%A7%D7%A1%D7%99%D7%A7%D7%94-2026.pdf",
+   "date": "2026-09-15",
+   "deadline": "2026-10-15",
+   "snippet": "מועד פרסום: 15.09.2026 | מועד אחרון להגשה: 15.10.2026",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": true,
+   "reason": "בקשה להצעת מחיר פתוחה של מכבי (תחום: רפואה), הגשה עד 15.10.2026"
+  },
+  {
+   "title": "בקשה להצעת מחיר לאירוע - הכנס השנתי של המחלקה להתמחות ברפואת המשפחה",
+   "url": "https://www.maccabi4u.co.il/media/kufdmmme/%D7%91%D7%9C%D7%9E-%D7%9C%D7%9B%D7%A0%D7%A1-%D7%94%D7%A9%D7%A0%D7%AA%D7%99-%D7%94%D7%9E%D7%97%D7%9C%D7%A7%D7%94-%D7%9C%D7%94%D7%AA%D7%9E%D7%97%D7%95%D7%AA-%D7%91%D7%A8%D7%A4%D7%95%D7%90%D7%AA-%D7%9E%D7%A9%D7%A4%D7%97%D7%94-2026.pdf",
+   "date": "2026-09-15",
+   "deadline": "2026-10-20",
+   "snippet": "מועד פרסום: 15.09.2026 | מועד אחרון להגשה: 20.10.2026",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": true,
+   "reason": "בקשה להצעת מחיר פתוחה של מכבי (תחום: אחר), הגשה עד 20.10.2026"
+  },
+  {
+   "title": "בקשה להצעת מחיר לכנס מנהלי מכוני פיזיותרפיה מכבי, כולל לינה",
+   "url": "https://www.maccabi4u.co.il/media/njdb53uu/%D7%91%D7%9C%D7%9E-%D7%9B%D7%A0%D7%A1-%D7%9C%D7%9E%D7%A0%D7%94%D7%9C%D7%99-%D7%9E%D7%9B%D7%95%D7%A0%D7%99-%D7%A4%D7%99%D7%96%D7%99%D7%95%D7%AA%D7%A8%D7%A4%D7%99%D7%94_%D7%9E%D7%A2%D7%95%D7%93%D7%9B%D7%9F.pdf",
+   "date": "2026-09-08",
+   "deadline": "2026-10-18",
+   "snippet": "מועד פרסום: 08.09.2026 | מועד אחרון להגשה: 18.10.2026",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": true,
+   "reason": "בקשה להצעת מחיר פתוחה של מכבי (תחום: אחר), הגשה עד 18.10.2026"
+  },
+  {
+   "title": "בקשה להצעת מחיר להחלפת מעלית מרכז רפואי רחוב כהנמן 64 ו' בני ברק",
+   "url": "https://www.maccabi4u.co.il/media/bh4aeeed/%D7%91%D7%A7%D7%A9%D7%94-%D7%9C%D7%A7%D7%91%D7%9C%D7%AA-%D7%94%D7%A6%D7%A2%D7%AA-%D7%9E%D7%97%D7%99%D7%A8-%D7%94%D7%97%D7%9C%D7%A4%D7%AA-%D7%9E%D7%A2%D7%9C%D7%99%D7%AA-%D7%A8%D7%97%D7%95%D7%91-%D7%9B%D7%94%D7%A0%D7%9E%D7%9F-64-%D7%95-%D7%91%D7%A0%D7%99-%D7%91%D7%A8%D7%A7-003.pdf",
+   "date": "2026-08-30",
+   "deadline": "2026-10-11",
+   "snippet": "מועד פרסום: 30.08.2026 | מועד אחרון להגשה: 11.10.2026",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": true,
+   "reason": "בקשה להצעת מחיר פתוחה של מכבי (תחום: בינוי ונדל''ן), הגשה עד 11.10.2026"
+  }
+ ]
+}

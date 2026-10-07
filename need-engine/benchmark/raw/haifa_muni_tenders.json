@@ -1,0 +1,153 @@
+{
+ "source": "עיריית חיפה – מערכת מכרזים (www2.haifa.muni.il/Michrazim)",
+ "access_method": "HTML (ASP.NET, טבלה סטטית): https://www2.haifa.muni.il/Michrazim/Default.aspx. מסמכי מכרז כ-PDF תחת https://www2.haifa.muni.il/Michrazim/TendersFiles/{num}-2026First.pdf|Sofi.pdf. אין RSS/API. יש רישום לעדכונים במייל לכל מכרז",
+ "robots": "ב-www2.haifa.muni.il אין robots.txt (מחזיר 404), כלומר אין הגבלה. ב-www.haifa.muni.il/robots.txt כתוב 'User-agent: *' בלי Disallow. אין anti-bot. הערה: ב-http הקבצים מחזירים 482, ולכן יש להשתמש ב-https",
+ "tos": "לא נבדק. באתר העירייה לא נמצא מסמך 'תנאי שימוש', רק מדיניות פרטיות",
+ "freshness": "הפריט האחרון הועלה ב-07/09/2026. ברשימה 12 פריטים, כולם פרסומים מ-07-09/2026. בערך 4-8 מכרזי ספקים בחודש",
+ "items": [
+  {
+   "title": "השכרת קיוסק ברחוב פלמ\"ח 7 בחיפה",
+   "url": "https://www2.haifa.muni.il/Michrazim/TendersFiles/42-2026First.pdf",
+   "date": "2026-09-07",
+   "deadline": "2026-11-30",
+   "snippet": "מספר מכרז: 2026 / 42 | ת. העלאה: 07/09/2026 | ת. אחרון להגשה: 30/11/2026",
+   "is_business_event": true,
+   "explicit_need": false,
+   "predictive_need": false,
+   "actionable": false,
+   "reason": "העירייה משכירה נכס (קיוסק) ולא קונה. נכס של הגוף, לא רלוונטי"
+  },
+  {
+   "title": "הודעה על כוונה להתקשר עם חברת \"אורהייטק GIS בע\"מ\" לצורך הקמה , הפעלה ואחזקת מערכת חירום לניהול אוכלוסייה ורציפות תפקודית במצבי חירום ומשבר",
+   "url": "https://www2.haifa.muni.il/Michrazim/TendersFiles/0609-2026First.pdf",
+   "date": "2026-09-06",
+   "deadline": "2026-09-24",
+   "snippet": "מספר מכרז: 2026 / 609 | ת. העלאה: 06/09/2026 | ת. אחרון להגשה: 24/09/2026",
+   "is_business_event": true,
+   "explicit_need": false,
+   "predictive_need": false,
+   "actionable": false,
+   "reason": "כוונת התקשרות עם ספק שכבר נבחר, ומועד ההתנגדות (24/09/2026) עבר"
+  },
+  {
+   "title": "הודעה על כוונה להתקשר עם חברת מוטורולה סולושנס ישראל בע״מ לצורך שירות ואחזקת מערכות בקרת השקיה ממוחשבת בגנים ציבוריים בחיפה",
+   "url": "https://www2.haifa.muni.il/Michrazim/TendersFiles/0209-2026First.pdf",
+   "date": "2026-09-02",
+   "deadline": "2026-09-22",
+   "snippet": "מספר מכרז: 2026 / 209 | ת. העלאה: 02/09/2026 | ת. אחרון להגשה: 22/09/2026",
+   "is_business_event": true,
+   "explicit_need": false,
+   "predictive_need": false,
+   "actionable": false,
+   "reason": "כוונת התקשרות עם ספק שכבר נבחר, ומועד ההתנגדות (22/09/2026) עבר"
+  },
+  {
+   "title": "מתן שירותי תוכנה, פיתוח ותמיכה טכנולוגית במודל שירות מנוהל ( Managed Services ) עבור מערכות גבייה, פיננסית לוגיסטית , הנדסה, רווחה, חינוך, שכר ומשאבי אנוש",
+   "url": "https://www2.haifa.muni.il/Michrazim/TendersFiles/39-2026First.pdf",
+   "date": "2026-08-31",
+   "deadline": "2026-12-21",
+   "snippet": "מספר מכרז: 2026 / 39 | ת. העלאה: 31/08/2026 | ת. אחרון להגשה: 21/12/2026",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": true,
+   "reason": "מכרז פתוח לשירותי תוכנה מנוהלים, הגשה עד 21/12/2026"
+  },
+  {
+   "title": "אספקה, הטמעה, תמיכה ותחזוקה של מערכת ממוחשבת לניהול תהליך התמיכות העירוני",
+   "url": "https://www2.haifa.muni.il/Michrazim/TendersFiles/38-2026Sofi.pdf",
+   "date": "2026-08-24",
+   "deadline": "2026-10-19",
+   "snippet": "מספר מכרז: 2026 / 38 | ת. העלאה: 24/08/2026 | ת. אחרון להגשה: 19/10/2026",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": true,
+   "reason": "מכרז פתוח למערכת ממוחשבת, הגשה עד 19/10/2026"
+  },
+  {
+   "title": "מתן שרותי משלוח דואר כמותי",
+   "url": "https://www2.haifa.muni.il/Michrazim/TendersFiles/40-2026First.pdf",
+   "date": "2026-08-24",
+   "deadline": "2026-10-26",
+   "snippet": "מספר מכרז: 2026 / 40 | ת. העלאה: 24/08/2026 | ת. אחרון להגשה: 26/10/2026",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": true,
+   "reason": "מכרז פתוח לשירותי דואר כמותי, הגשה עד 26/10/2026"
+  },
+  {
+   "title": "אספקה, התקנה, אחזקה ושרות של מערכות גנרטורים, במערך החירום, במנהרות תשתית, במערכות ניקוז ומתקנים עירוניים נוספים בתחום השיפוט של עיריית חיפה",
+   "url": "https://www2.haifa.muni.il/Michrazim/TendersFiles/36-2026Sofi.pdf",
+   "date": "2026-08-24",
+   "deadline": "2026-10-19",
+   "snippet": "מספר מכרז: 2026 / 36 | ת. העלאה: 24/08/2026 | ת. אחרון להגשה: 19/10/2026",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": true,
+   "reason": "מכרז פתוח לגנרטורים ואחזקה, הגשה עד 19/10/2026"
+  },
+  {
+   "title": "מתן שירותי ניקיון ואחזקה של שירותים ציבוריים ברחבי העיר חיפה",
+   "url": "https://www2.haifa.muni.il/Michrazim/TendersFiles/35-2026Sofi.pdf",
+   "date": "2026-08-24",
+   "deadline": "2026-10-19",
+   "snippet": "מספר מכרז: 2026 / 35 | ת. העלאה: 24/08/2026 | ת. אחרון להגשה: 19/10/2026",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": true,
+   "reason": "מכרז פתוח לניקיון ואחזקה, הגשה עד 19/10/2026"
+  },
+  {
+   "title": "שירותי חקירות, איתורים ומסירות",
+   "url": "https://www2.haifa.muni.il/Michrazim/TendersFiles/37-2026First.pdf",
+   "date": "2026-08-24",
+   "deadline": "2026-10-26",
+   "snippet": "מספר מכרז: 2026 / 37 | ת. העלאה: 24/08/2026 | ת. אחרון להגשה: 26/10/2026",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": true,
+   "reason": "מכרז פתוח לשירותי חקירות ומסירות, הגשה עד 26/10/2026"
+  },
+  {
+   "title": "מתן שרותי הדפסה של הודעות תשלום, טפסים אחרים ודיוור דיגיטלי",
+   "url": "https://www2.haifa.muni.il/Michrazim/TendersFiles/41-2026Sofi.pdf",
+   "date": "2026-08-24",
+   "deadline": "2026-10-19",
+   "snippet": "מספר מכרז: 2026 / 41 | ת. העלאה: 24/08/2026 | ת. אחרון להגשה: 19/10/2026",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": true,
+   "reason": "מכרז פתוח להדפסה ודיוור, הגשה עד 19/10/2026"
+  },
+  {
+   "title": "הפעלת מרכז יום לאזרחים ותיקים תשושים ותשושי נפש בקרית חיים",
+   "url": "https://www2.haifa.muni.il/Michrazim/TendersFiles/34-2026Sofi.pdf",
+   "date": "2026-07-27",
+   "deadline": "2026-10-19",
+   "snippet": "מספר מכרז: 2026 / 34 | ת. העלאה: 27/07/2026 | ת. אחרון להגשה: 19/10/2026",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": true,
+   "reason": "מכרז פתוח להפעלת מרכז יום, הגשה עד 19/10/2026"
+  },
+  {
+   "title": "השכרת מזנון ברחוב אהרון רוזנפלד מול 13 (בת גלים) בחיפה חלק מחלקה 8 בגוש 11697",
+   "url": "https://www2.haifa.muni.il/Michrazim/TendersFiles/29-2026First.pdf",
+   "date": "2026-07-07",
+   "deadline": "2026-10-12",
+   "snippet": "מספר מכרז: 2026 / 29 | ת. העלאה: 07/07/2026 | ת. אחרון להגשה: 12/10/2026",
+   "is_business_event": true,
+   "explicit_need": false,
+   "predictive_need": false,
+   "actionable": false,
+   "reason": "העירייה משכירה נכס (מזנון) ולא קונה. נכס של הגוף, לא רלוונטי"
+  }
+ ]
+}

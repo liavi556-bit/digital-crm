@@ -1,0 +1,82 @@
+{
+ "source": "Expo Tel Aviv - tenders post type via WP REST",
+ "access_method": "https://expotelaviv.co.il/wp-json/wp/v2/tender?per_page=100 - JSON; only 6 items exist; each page https://expotelaviv.co.il/tenders/... fetched once; deadlines are in attached files (not downloaded)",
+ "robots": "allowed - only /wp-admin disallowed",
+ "tos": "ToS not reviewed",
+ "freshness": "newest 2026-06-24; 6 tenders in ~8 months (<1/month)",
+ "fetched_at": "2026-10-07T18:34:51+03:00",
+ "items": [
+  {
+   "title": "מכרז פומבי מס' 25/6/2026 להקמה ותפעול שלטי חוצות של אקספו תל-אביב המרכז הבינלאומי לכנסים ותערוכות בע\"מ",
+   "url": "https://expotelaviv.co.il/tenders/%d7%9e%d7%9b%d7%a8%d7%96-%d7%a4%d7%95%d7%9e%d7%91%d7%99-%d7%9e%d7%a1-25-6-2026-%d7%9c%d7%94%d7%a7%d7%9e%d7%94-%d7%95%d7%aa%d7%a4%d7%a2%d7%95%d7%9c-%d7%a9%d7%9c%d7%98%d7%99-%d7%97%d7%95%d7%a6%d7%95/",
+   "date": "2026-06-24",
+   "deadline": null,
+   "snippet": "Public tender 25/6/2026 for building and operating billboards at Expo Tel Aviv (summary written from title; page body has only attachments)",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": false,
+   "reason": "Explicit procurement by Expo Tel Aviv, but deadline is inside an attached PDF/DOCX (not downloaded/checked) and the post is old (June 2026 or earlier, 3.5+ months), so likely closed"
+  },
+  {
+   "title": "מכרז פומבי 4/6/2026 להקמת מתחם כניסה ראשית בשד' רוקח",
+   "url": "https://expotelaviv.co.il/tenders/%d7%9e%d7%9b%d7%a8%d7%96-%d7%a4%d7%95%d7%9e%d7%91%d7%99-4-6-2026-%d7%9c%d7%94%d7%a7%d7%9e%d7%aa-%d7%9e%d7%aa%d7%97%d7%9d-%d7%9b%d7%a0%d7%99%d7%a1%d7%94-%d7%a8%d7%90%d7%a9%d7%99%d7%aa-%d7%91%d7%a9/",
+   "date": "2026-06-04",
+   "deadline": null,
+   "snippet": "Public tender for building a main entrance complex on Rokach Blvd (summary written from title; page body has only attachments)",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": false,
+   "reason": "Explicit procurement by Expo Tel Aviv, but deadline is inside an attached PDF/DOCX (not downloaded/checked) and the post is old (June 2026 or earlier, 3.5+ months), so likely closed"
+  },
+  {
+   "title": "מכרז פומבי מס' 22/2/2026 ביצוע עבודות להקמת מתחם שירותים בביתן 2",
+   "url": "https://expotelaviv.co.il/tenders/%d7%9e%d7%9b%d7%a8%d7%96-%d7%a4%d7%95%d7%9e%d7%91%d7%99-%d7%9e%d7%a1-22-2-2026-%d7%91%d7%99%d7%a6%d7%95%d7%a2-%d7%a2%d7%91%d7%95%d7%93%d7%95%d7%aa-%d7%9c%d7%94%d7%a7%d7%9e%d7%aa-%d7%9e%d7%aa%d7%97/",
+   "date": "2026-02-22",
+   "deadline": null,
+   "snippet": "Public tender for works to build a restroom complex in Pavilion 2 (summary written from title; page body has only attachments)",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": false,
+   "reason": "Explicit procurement by Expo Tel Aviv, but deadline is inside an attached PDF/DOCX (not downloaded/checked) and the post is old (June 2026 or earlier, 3.5+ months), so likely closed"
+  },
+  {
+   "title": "מכרז פומבי מס' 12/2/2026 להשכרת מתחם משרדים",
+   "url": "https://expotelaviv.co.il/tenders/%d7%9e%d7%9b%d7%a8%d7%96-%d7%a4%d7%95%d7%9e%d7%91%d7%99-%d7%9e%d7%a1-12-2-2026/",
+   "date": "2026-02-12",
+   "deadline": null,
+   "snippet": "Public tender for leasing an office complex (landlord side, not a purchase) (summary written from title; page body has only attachments)",
+   "is_business_event": true,
+   "explicit_need": false,
+   "predictive_need": false,
+   "actionable": false,
+   "reason": "Lease-out tender (Expo is the lessor), not a purchase; also old"
+  },
+  {
+   "title": "מכרז פומבי 1/2026 להצבת והפעלת שילוט חוצות",
+   "url": "https://expotelaviv.co.il/tenders/%d7%9e%d7%9b%d7%a8%d7%96-%d7%a4%d7%95%d7%9e%d7%91%d7%99-1-2026-%d7%9c%d7%94%d7%a6%d7%91%d7%aa-%d7%95%d7%94%d7%a4%d7%a2%d7%9c%d7%aa-%d7%a9%d7%99%d7%9c%d7%95%d7%98-%d7%97%d7%95%d7%a6%d7%95%d7%aa/",
+   "date": "2026-01-22",
+   "deadline": null,
+   "snippet": "Public tender for placing and operating outdoor signage (summary written from title; page body has only attachments)",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": false,
+   "reason": "Explicit procurement by Expo Tel Aviv, but deadline is inside an attached PDF/DOCX (not downloaded/checked) and the post is old (June 2026 or earlier, 3.5+ months), so likely closed"
+  },
+  {
+   "title": "מכרז פומבי למתן שירות ותחזוקה למערכות מיזוג אויר באקספו ת\"א",
+   "url": "https://expotelaviv.co.il/tenders/%d7%9e%d7%9b%d7%a8%d7%96-%d7%a4%d7%95%d7%9e%d7%91%d7%99-%d7%9e%d7%a1-23-10-2025-%d7%9c%d7%9e%d7%aa%d7%9f-%d7%a9%d7%99%d7%a8%d7%95%d7%aa-%d7%95%d7%aa%d7%97%d7%96%d7%95%d7%a7%d7%94-%d7%9c%d7%9c%d7%90/",
+   "date": "2025-10-26",
+   "deadline": null,
+   "snippet": "Public tender for air-conditioning service and maintenance (summary written from title; page body has only attachments)",
+   "is_business_event": true,
+   "explicit_need": true,
+   "predictive_need": false,
+   "actionable": false,
+   "reason": "Explicit procurement by Expo Tel Aviv, but deadline is inside an attached PDF/DOCX (not downloaded/checked) and the post is old (June 2026 or earlier, 3.5+ months), so likely closed"
+  }
+ ]
+}

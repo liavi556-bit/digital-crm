@@ -1,5 +1,25 @@
 # POC Results
 
+## Round 2 — Opportunity Density (2026-10-07) — latest
+Details: `docs/SOURCE-BENCHMARK.md` (≈25 sources benchmarked by hand) and `docs/REAL-WORLD-EVAL-R2.md` (40 opportunities reviewed one by one).
+
+| | target | result |
+|---|---|---|
+| quality sources | ≥3 | 3 (Dekel bids, Haifa muni tenders, TLV construction sites) |
+| candidates | ≥100 | **48 — not met** (only 83 items exist in the 3 allowed sources, 35 stale) |
+| opportunities | ≥20 | 40 |
+| precision after LLM | ≥70% | **67.5% strict** (27 TP / 40; 7 UNCLEAR counted as misses) · 81.8% excluding UNCLEAR |
+| explicit needs (tenders) | | **88%** (22/25) |
+| predictive needs (permits) | | 33% (5/15) |
+
+Owner decisions applied: data.gov.il `/api/` and Google News disabled; open deadline overrides publication age; LLM extraction only after a
+cheap candidate filter; taxonomy only from the LLM. Both earlier rule bugs fixed ("המכרזנית" ≠ מכרז; "לפרסום" in an attachment ≠ advertising).
+LLM = local `claude -p` (haiku) with a JSON schema; every quote, entity and deadline is validated against the source.
+
+---
+
+## Round 1 (2026-10-07, rules extractor)
+
 Real run on 2026-10-07 from an open network (`CONNECTORS=rss,ckan npm run poc`, empty DB), plus `npm test` (9/9 pass).
 Extractor: `rules-v1` — **LLM mode still not run** (no key available).
 
