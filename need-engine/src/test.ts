@@ -13,6 +13,7 @@ import type { NeedExtractor, HttpClient, LLMProvider } from './types.js';
 import { candidateHit } from './engine/candidate.js';
 import { LLMNeedExtractorV2 } from './engine/llm-extract.js';
 import { parseJsonLoose } from './providers/llm.js';
+import { validateMonetization } from './engine/monetize.js';
 
 const quiet = { info() {}, warn() {}, error() {} };
 const tests: [string, () => Promise<void>][] = [];
@@ -146,6 +147,18 @@ t('LLM v2: non-verbatim quotes, invented entity and invented deadline are reject
 
 t('LLM JSON with unescaped Hebrew abbreviation quotes is repaired', async () => {
   assert.deepEqual(parseJsonLoose<any>('```json\n{"entity":"מוריה חברה לפיתוח בע"מ","v":"ש"ח"}\n```'), { entity: 'מוריה חברה לפיתוח בע״מ', v: 'ש״ח' });
+});
+
+t('monetization: a "stated" amount not in the evidence is downgraded to estimate', async () => {
+  const o: any = { what_happened: 'מכרז לניקיון בהיקף 2,000,000 ש"ח', evidence: [{ quote: 'בהיקף 2,000,000 ש"ח' }], explicit_needs: [] };
+  const p = (v: number) => ({ model: 'LEAD_SUBSCRIPTION', who_pays: 'x', what_we_sell: 'x', target_buyers: [], deal_value_ils: v, deal_value_basis: 'stated', our_revenue_ils: 1, our_revenue_logic: 'x', first_step: 'x', days_to_cash: 1, competition: 'x', legal_or_ethical_risk: 'x' });
+  const m = validateMonetization({ opportunity_types: ['DEMAND'], monetizable: true, why_not: null, best_path_index: 5, paths: [p(2000000), p(750000)] }, o);
+  assert.equal(m.paths[0].deal_value_basis, 'stated'); assert.equal(m.paths[1].deal_value_basis, 'estimate'); assert.equal(m.best_path_index, 1);
+});
+
+t('profile: explicit services are not widened by keywords in the description', async () => {
+  const p = await buildProfile({ description: 'חברת ניקיון: ניקיון סוף בנייה ופוליש', services: ['cleaning'] });
+  assert.deepEqual(p.services, ['cleaning']);
 });
 
 t('connector failure is graceful', async () => {

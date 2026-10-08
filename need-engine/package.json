@@ -11,7 +11,10 @@
     "poc": "tsx src/cli.ts poc",
     "demo": "tsx src/cli.ts poc --fixtures",
     "serve": "tsx src/server.ts",
-    "test": "tsx src/test.ts"
+    "test": "tsx src/test.ts",
+    "monetize": "tsx src/cli.ts monetize",
+    "synthesize": "tsx src/cli.ts synthesize",
+    "match": "tsx src/cli.ts match"
   },
   "dependencies": {
     "fast-xml-parser": "^4.5.0"

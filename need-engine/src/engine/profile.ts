@@ -33,7 +33,9 @@ export async function buildProfile(input: ProfileInput, http?: HttpClient, llm?:
   function finish(p: { name: string; services: string[]; regions: string[]; customer_types: string[] }): BusinessProfile {
     return {
       name: p.name, url: input.url ?? null, description: input.description ?? text.slice(0, 500),
-      services: [...new Set([...(input.services ?? []), ...p.services])],
+      // explicit services are authoritative; keyword detection only fills in when none were given
+      // (e.g. "ניקיון סוף בנייה" must not turn a cleaning company into a construction contractor)
+      services: input.services?.length ? [...new Set(input.services)] : [...new Set(p.services)],
       regions: (input.regions?.length ? input.regions : p.regions).length ? (input.regions?.length ? input.regions : p.regions) : ['כל הארץ'],
       customer_types: input.customer_types?.length ? input.customer_types : p.customer_types,
       deal_min: input.deal_min ?? null, deal_max: input.deal_max ?? null,

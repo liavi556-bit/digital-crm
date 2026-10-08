@@ -1,0 +1,166 @@
+{
+ "reviewed_by": "Claude (manual, item by item) 2026-10-07",
+ "db": "data/round2/ne.db",
+ "verdicts": {
+  "1": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "2": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "3": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "4": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "5": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "6": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "7": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "8": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "9": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "10": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "11": {
+   "verdict": "FP",
+   "reason": "duplicate of #10 (English twin)"
+  },
+  "12": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "13": {
+   "verdict": "FP",
+   "reason": "open only to TrackMakers alumni"
+  },
+  "14": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "15": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "16": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "17": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "18": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "19": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "20": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "21": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "22": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "23": {
+   "verdict": "FP",
+   "reason": "permit amendment; predicted needs already contracted"
+  },
+  "24": {
+   "verdict": "UNCLEAR",
+   "reason": null
+  },
+  "25": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "26": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "27": {
+   "verdict": "UNCLEAR",
+   "reason": null
+  },
+  "28": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "29": {
+   "verdict": "UNCLEAR",
+   "reason": null
+  },
+  "30": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "31": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "32": {
+   "verdict": "UNCLEAR",
+   "reason": null
+  },
+  "33": {
+   "verdict": "UNCLEAR",
+   "reason": null
+  },
+  "34": {
+   "verdict": "UNCLEAR",
+   "reason": null
+  },
+  "35": {
+   "verdict": "FP",
+   "reason": "small private build, generic needs"
+  },
+  "36": {
+   "verdict": "FP",
+   "reason": "small build, generic needs"
+  },
+  "37": {
+   "verdict": "UNCLEAR",
+   "reason": null
+  },
+  "38": {
+   "verdict": "FP",
+   "reason": "single-supplier intent notice"
+  },
+  "39": {
+   "verdict": "TP",
+   "reason": null
+  },
+  "40": {
+   "verdict": "TP",
+   "reason": null
+  }
+ }
+}
